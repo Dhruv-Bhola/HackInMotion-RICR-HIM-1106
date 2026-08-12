@@ -33,6 +33,34 @@
             transform: translateY(-8px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
+
+        .priority-card {
+            border-left: 5px solid;
+        }
+        .decision-chip {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: .03em;
+            padding: .25rem .55rem;
+            border-radius: 999px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+        }
+        .action-row {
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .action-row:hover {
+            transform: translateX(3px);
+            box-shadow: 0 8px 18px rgba(0,0,0,.07);
+        }
+        .pulse-dot {
+            animation: pulseDot 1.8s infinite;
+        }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .55; transform: scale(1.18); }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -229,6 +257,179 @@
                     <i class="fa-solid fa-grip text-emerald-700"></i> किसान मुख्य सेवाएं
                 </h3>
                 <p class="text-gray-600">नीचे दिए गए तीनों बॉक्स में से अपनी आवश्यकता अनुसार चुनें:</p>
+            </div>
+
+
+            <!-- SMART FARM DECISION INTELLIGENCE (ADDED) -->
+            <div class="mb-8">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 bg-emerald-500 rounded-full pulse-dot"></span>
+                            <span class="text-xs font-bold uppercase tracking-widest text-emerald-700">Decision Engine</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-gray-800 heading-font mt-1">
+                            आज के खेत के फैसले
+                        </h3>
+                        <p class="text-gray-600 text-sm">
+                            मौसम, फसल, सिंचाई और बाजार संकेतों को एक साथ देखकर प्राथमिक कार्रवाई।
+                        </p>
+                    </div>
+                    <div class="text-xs text-gray-500 bg-white border rounded-lg px-3 py-2">
+                        अंतिम अपडेट: <span id="decisionUpdatedAt">अभी</span>
+                    </div>
+                </div>
+
+                <!-- Decision summary -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+                    <div class="metric-card rounded-xl border border-blue-100 p-4 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500">बारिश संभावना</span>
+                            <i class="fa-solid fa-cloud-rain text-blue-600"></i>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-800 mt-2">82%</p>
+                        <p class="text-xs text-blue-700 mt-1">अगले 36 घंटे</p>
+                    </div>
+                    <div class="metric-card rounded-xl border border-cyan-100 p-4 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500">तापमान</span>
+                            <i class="fa-solid fa-temperature-half text-cyan-700"></i>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-800 mt-2">28°C</p>
+                        <p class="text-xs text-cyan-700 mt-1">आज का अनुमान</p>
+                    </div>
+                    <div class="metric-card rounded-xl border border-amber-100 p-4 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500">मौसम जोखिम</span>
+                            <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-800 mt-2">MEDIUM</p>
+                        <p class="text-xs text-amber-700 mt-1">भारी बारिश की निगरानी</p>
+                    </div>
+                    <div class="metric-card rounded-xl border border-emerald-100 p-4 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500">बाजार ट्रेंड</span>
+                            <i class="fa-solid fa-chart-line text-emerald-700"></i>
+                        </div>
+                        <p class="text-2xl font-bold text-gray-800 mt-2">↑ 4.2%</p>
+                        <p class="text-xs text-emerald-700 mt-1">गेहूं · 7 दिन</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <!-- Today's actions -->
+                    <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-md p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-bold text-gray-800 flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-emerald-700"></i>
+                                Today's Farm Actions
+                            </h4>
+                            <span class="decision-chip bg-red-100 text-red-700">3 प्राथमिकताएं</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="action-row priority-card border-red-500 bg-red-50 rounded-xl p-4">
+                                <div class="flex gap-3">
+                                    <div class="w-10 h-10 shrink-0 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
+                                        <i class="fa-solid fa-droplet-slash"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <p class="font-bold text-gray-800">आज सिंचाई न करें</p>
+                                            <span class="decision-chip bg-red-100 text-red-700">HIGH</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            अगले 36 घंटों में पर्याप्त बारिश की संभावना है। अनावश्यक पानी की बचत करें।
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="action-row priority-card border-amber-500 bg-amber-50 rounded-xl p-4">
+                                <div class="flex gap-3">
+                                    <div class="w-10 h-10 shrink-0 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <p class="font-bold text-gray-800">फसल की पत्तियों का निरीक्षण करें</p>
+                                            <span class="decision-chip bg-amber-100 text-amber-700">MEDIUM</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            नमी अधिक रहने पर पत्तियों पर धब्बे या फंगल लक्षणों की जांच करें।
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="action-row priority-card border-emerald-500 bg-emerald-50 rounded-xl p-4">
+                                <div class="flex gap-3">
+                                    <div class="w-10 h-10 shrink-0 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                                        <i class="fa-solid fa-arrow-trend-up"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <p class="font-bold text-gray-800">गेहूं के बाजार भाव पर नजर रखें</p>
+                                            <span class="decision-chip bg-emerald-100 text-emerald-700">LOW</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            हाल की कीमतों में बढ़त है। बिक्री का निर्णय स्थानीय मंडी भाव देखकर लें।
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weather + irrigation decision -->
+                    <div class="space-y-5">
+                        <div class="bg-gradient-to-br from-blue-700 to-cyan-700 text-white rounded-2xl p-5 shadow-md">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs text-blue-100 uppercase tracking-wider">Weather Intelligence</p>
+                                    <h4 class="text-xl font-bold mt-1">आज का मौसम</h4>
+                                </div>
+                                <i class="fa-solid fa-cloud-sun text-3xl text-yellow-200"></i>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 mt-5">
+                                <div class="bg-white/10 rounded-lg p-3">
+                                    <p class="text-xs text-blue-100">Rain</p>
+                                    <p class="font-bold">22 mm</p>
+                                </div>
+                                <div class="bg-white/10 rounded-lg p-3">
+                                    <p class="text-xs text-blue-100">Humidity</p>
+                                    <p class="font-bold">76%</p>
+                                </div>
+                                <div class="bg-white/10 rounded-lg p-3">
+                                    <p class="text-xs text-blue-100">Wind</p>
+                                    <p class="font-bold">14 km/h</p>
+                                </div>
+                                <div class="bg-white/10 rounded-lg p-3">
+                                    <p class="text-xs text-blue-100">ET₀</p>
+                                    <p class="font-bold">3.1 mm</p>
+                                </div>
+                            </div>
+                            <button onclick="openModal('weatherModal')" class="w-full mt-4 bg-white text-blue-800 font-bold py-2 rounded-lg hover:bg-blue-50 transition">
+                                मौसम विवरण देखें
+                            </button>
+                        </div>
+
+                        <div class="bg-white rounded-2xl border border-emerald-100 p-5 shadow-md">
+                            <div class="flex items-center gap-2 text-emerald-700 mb-2">
+                                <i class="fa-solid fa-faucet-drip"></i>
+                                <h4 class="font-bold">Irrigation Decision</h4>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-800">WAIT</p>
+                            <p class="text-sm text-gray-600 mt-1">
+                                बारिश के कारण आज सिंचाई टालने की सलाह।
+                            </p>
+                            <div class="mt-3 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500 rounded-full" style="width:82%"></div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">Decision confidence: 82%</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- THE 3 POPUP BOXES / CARDS -->
@@ -454,6 +655,61 @@
     </div>
 
 
+
+    <!-- ADDED MODAL: WEATHER INTELLIGENCE -->
+    <div id="weatherModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+            <button onclick="closeModal('weatherModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-xl w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-3 text-blue-700 mb-5">
+                <i class="fa-solid fa-cloud-sun-rain text-3xl"></i>
+                <div>
+                    <h3 class="text-2xl font-bold heading-font">मौसम इंटेलिजेंस</h3>
+                    <p class="text-xs text-gray-500">कृषि निर्णय के लिए उपयोगी मौसम संकेत</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="bg-blue-50 rounded-xl p-4 text-center">
+                    <p class="text-xs text-gray-500">तापमान</p>
+                    <p class="text-xl font-bold text-blue-800">28°C</p>
+                </div>
+                <div class="bg-cyan-50 rounded-xl p-4 text-center">
+                    <p class="text-xs text-gray-500">बारिश</p>
+                    <p class="text-xl font-bold text-cyan-800">22 mm</p>
+                </div>
+                <div class="bg-indigo-50 rounded-xl p-4 text-center">
+                    <p class="text-xs text-gray-500">संभावना</p>
+                    <p class="text-xl font-bold text-indigo-800">82%</p>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-4 text-center">
+                    <p class="text-xs text-gray-500">हवा</p>
+                    <p class="text-xl font-bold text-slate-800">14 km/h</p>
+                </div>
+            </div>
+
+            <div class="mt-5 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div class="flex items-center gap-2 text-amber-800 font-bold">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Weather Risk: MEDIUM
+                </div>
+                <p class="text-sm text-gray-700 mt-1">
+                    भारी बारिश की संभावना के कारण सिंचाई और अनावश्यक field operations को टालना बेहतर है।
+                </p>
+            </div>
+
+            <div class="mt-5">
+                <h4 class="font-bold text-gray-800 mb-2">Decision logic</h4>
+                <div class="text-sm text-gray-600 space-y-2">
+                    <p>🌧️ Rain probability + expected precipitation → irrigation delay signal</p>
+                    <p>💧 Crop stage + recent weather → irrigation priority</p>
+                    <p>⚠️ Rain / heat / wind / humidity → farming risk classification</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
         // Check local storage for active user session on load
@@ -465,7 +721,18 @@
             } else {
                 showSection('home');
             }
+            updateDecisionTimestamp();
         };
+
+        function updateDecisionTimestamp() {
+            const el = document.getElementById('decisionUpdatedAt');
+            if (el) {
+                el.innerText = new Date().toLocaleTimeString('hi-IN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+        }
 
         // Section Router
         function showSection(section) {
@@ -541,6 +808,14 @@
             document.getElementById('welcomeHeading').innerText = "नमस्ते, " + currentUser.name + " जी!";
             document.getElementById('userCropInfo').innerText = "मुख्य फसल: " + currentUser.crop + " | राज्य: " + currentUser.state;
 
+            // Personalize decision context without changing the existing dashboard data.
+            const cropLabel = currentUser.crop || "फसल";
+            const actionRows = document.querySelectorAll('.action-row');
+            if (actionRows.length) {
+                const healthText = actionRows[1].querySelector('p.font-bold');
+                if (healthText) healthText.innerText = cropLabel + " की पत्तियों का निरीक्षण करें";
+            }
+            updateDecisionTimestamp();
             showSection('dashboard');
         }
 
@@ -551,6 +826,38 @@
             document.getElementById('userProfileNav').classList.add('hidden');
             document.getElementById('navButtons').classList.remove('hidden');
             showSection('home');
+        }
+
+        // Decision Engine (demo rules; replace inputs with live API values in production)
+        function getIrrigationDecision({rainProbability, expectedRainMm, soilMoisture, cropStage}) {
+            if (expectedRainMm >= 10 || rainProbability >= 70) {
+                return {
+                    decision: "WAIT",
+                    reason: "Significant rainfall is expected; irrigation can be delayed.",
+                    confidence: Math.min(95, Math.max(70, Math.round((rainProbability + expectedRainMm) / 2)))
+                };
+            }
+            if (soilMoisture !== undefined && soilMoisture < 30) {
+                return {
+                    decision: "IRRIGATE SOON",
+                    reason: "Low soil moisture with limited rainfall expected.",
+                    confidence: 78
+                };
+            }
+            return {
+                decision: "MONITOR",
+                reason: "Current conditions do not indicate an urgent irrigation need.",
+                confidence: 70
+            };
+        }
+
+        function getWeatherRisk({rainProbability, temperature, wind, humidity}) {
+            let score = 0;
+            if (rainProbability >= 70) score += 2;
+            if (temperature >= 38) score += 2;
+            if (wind >= 35) score += 2;
+            if (humidity >= 85) score += 1;
+            return score >= 4 ? "HIGH" : score >= 2 ? "MEDIUM" : "LOW";
         }
 
         // Modal Controls
