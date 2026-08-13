@@ -6,6 +6,12 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [activeModal, setActiveModal] = useState(null);
   const [healthResultVisible, setHealthResultVisible] = useState(false);
+  const [advisoryMode, setAdvisoryMode] = useState('balanced');
+  const [advisoryCrop, setAdvisoryCrop] = useState('');
+  const [advisorySoil, setAdvisorySoil] = useState('दोमट');
+  const [advisoryResult, setAdvisoryResult] = useState(null);
+  const [weather, setWeather] = useState(null);
+  const [weatherLoading, setWeatherLoading] = useState(false);
 
   // Form States
   const [loginPhone, setLoginPhone] = useState('');
@@ -37,6 +43,7 @@ export default function App() {
     if (storedUser && storedUser.phone === loginPhone && storedUser.password === loginPassword) {
       setCurrentUser(storedUser);
       setActiveSection('dashboard');
+      fetchWeather(storedUser.state);
     } else if (!storedUser) {
       const demoUser = {
         name: "किसान भाई",
@@ -47,6 +54,7 @@ export default function App() {
       localStorage.setItem('kisanUser', JSON.stringify(demoUser));
       setCurrentUser(demoUser);
       setActiveSection('dashboard');
+      fetchWeather(demoUser.state);
     } else {
       alert('गलत मोबाइल नंबर या पासवर्ड! कृपया पुनः प्रयास करें।');
     }
@@ -58,6 +66,69 @@ export default function App() {
     setCurrentUser(regData);
     alert(`बधाई हो ${regData.name}! आपका पंजीकरण सफलतापूर्वक हो गया है।`);
     setActiveSection('dashboard');
+  };
+
+  const stateCoordinates = {
+    'उत्तर प्रदेश': { lat: 26.85, lon: 80.95 },
+    'मध्य प्रदेश': { lat: 23.25, lon: 77.41 },
+    'बिहार': { lat: 25.60, lon: 85.14 },
+    'राजस्थान': { lat: 26.91, lon: 75.79 },
+    'हरियाणा': { lat: 29.06, lon: 76.08 },
+    'पंजाब': { lat: 30.90, lon: 75.85 }
+  };
+
+  const fetchWeather = async (stateName) => {
+    const place = stateCoordinates[stateName] || stateCoordinates['मध्य प्रदेश'];
+    setWeatherLoading(true);
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${place.lat}&longitude=${place.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=3`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Weather request failed');
+      setWeather(await response.json());
+    } catch (error) {
+      console.error(error);
+      setWeather(null);
+    } finally {
+      setWeatherLoading(false);
+    }
+  };
+
+  const weatherText = (code) => {
+    if (code === 0) return 'साफ आसमान';
+    if ([1,2,3].includes(code)) return 'आंशिक बादल';
+    if ([45,48].includes(code)) return 'कोहरा';
+    if ([51,53,55,56,57].includes(code)) return 'हल्की बूंदाबांदी';
+    if ([61,63,65,66,67,80,81,82].includes(code)) return 'बारिश';
+    if ([95,96,99].includes(code)) return 'गरज के साथ बारिश';
+    return 'मौसम सामान्य';
+  };
+
+  const generateAdvisory = () => {
+    const crop = advisoryCrop || currentUser?.crop || 'गेहूं';
+    const advice = {
+      economical: {
+        title: 'किफायती खेती योजना',
+        points: [`फसल: ${crop} | मिट्टी: ${advisorySoil}`,
+          'मृदा जांच के आधार पर ही उर्वरक दें और अनावश्यक इनपुट खर्च कम करें।',
+          'स्थानीय उपलब्ध जैविक खाद/कम्पोस्ट का उपयोग करें।',
+          'सिंचाई का समय मौसम पूर्वानुमान देखकर तय करें।']
+      },
+      sustainable: {
+        title: 'पर्यावरण-अनुकूल खेती योजना',
+        points: [`फसल: ${crop} | मिट्टी: ${advisorySoil}`,
+          'जैविक खाद, कम्पोस्ट और फसल अवशेष प्रबंधन को प्राथमिकता दें।',
+          'कीट नियंत्रण में पहले निगरानी और जैविक उपाय अपनाएं।',
+          'मिट्टी की नमी बचाने के लिए मल्चिंग और संतुलित सिंचाई करें।']
+      },
+      balanced: {
+        title: 'संतुलित खेती योजना',
+        points: [`फसल: ${crop} | मिट्टी: ${advisorySoil}`,
+          'उत्पादन, लागत और मिट्टी के स्वास्थ्य के बीच संतुलन रखें।',
+          'मृदा जांच के अनुसार उर्वरक की मात्रा तय करें।',
+          'मौसम और मंडी भाव देखकर सिंचाई तथा बिक्री का समय चुनें।']
+      }
+    };
+    setAdvisoryResult(advice[advisoryMode]);
   };
 
   const handleLogout = () => {
@@ -406,6 +477,31 @@ export default function App() {
               </div>
 
             </div>
+
+            <div className="mt-10">
+              <h3 className="text-2xl font-bold text-gray-800 font-['Tiro_Devanagari_Hindi',serif] flex items-center gap-2 mb-2">
+                ✨ स्मार्ट सुविधाएं
+              </h3>
+              <p className="text-gray-600 mb-5">CropCare की अतिरिक्त सुविधाएं एक ही जगह पर इस्तेमाल करें।</p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div onClick={() => { setAdvisoryCrop(currentUser.crop); setAdvisoryResult(null); setActiveModal('advisory'); }}
+                  className="bg-white rounded-2xl p-5 border-2 border-sky-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
+                  <div className="text-3xl mb-3">🎯</div>
+                  <h4 className="font-bold text-lg">फसल सलाह</h4>
+                  <p className="text-sm text-gray-600 mt-1">किफायती, टिकाऊ या संतुलित खेती योजना पाएं।</p>
+                </div>
+
+                <div onClick={() => { fetchWeather(currentUser.state); setActiveModal('weather'); }}
+                  className="bg-white rounded-2xl p-5 border-2 border-blue-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
+                  <div className="text-3xl mb-3">🌤️</div>
+                  <h4 className="font-bold text-lg">मौसम</h4>
+                  <p className="text-sm text-gray-600 mt-1">वर्तमान और 3 दिन का मौसम पूर्वानुमान।</p>
+                </div>
+
+
+              </div>
+            </div>
           </section>
         )}
 
@@ -418,6 +514,88 @@ export default function App() {
       </footer>
 
       {/* MODAL POPUPS */}
+
+      {/* SMART ADVISORY MODAL */}
+      {activeModal === 'advisory' && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+            <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 text-gray-400 text-xl w-8 h-8 rounded-full bg-gray-100">✕</button>
+            <h3 className="text-2xl font-bold text-emerald-800 mb-1">🎯 स्मार्ट फसल सलाह</h3>
+            <p className="text-sm text-gray-500 mb-5">फसल, मिट्टी और चुने हुए खेती मोड के आधार पर सलाह।</p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">फसल</label>
+                <select value={advisoryCrop} onChange={e => setAdvisoryCrop(e.target.value)} className="w-full px-3 py-2.5 border rounded-lg">
+                  <option value="">फसल चुनें</option>
+                  <option value="गेहूं">गेहूं</option><option value="धान">धान</option>
+                  <option value="मक्का">मक्का</option><option value="सरसों">सरसों</option><option value="आलू">आलू</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">मिट्टी</label>
+                <select value={advisorySoil} onChange={e => setAdvisorySoil(e.target.value)} className="w-full px-3 py-2.5 border rounded-lg">
+                  <option>दोमट</option><option>चिकनी मिट्टी</option><option>बलुई मिट्टी</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+              {[['economical','💰','किफायती'],['sustainable','🌱','पर्यावरण-अनुकूल'],['balanced','⚖️','संतुलित']].map(([value,icon,label]) => (
+                <button key={value} onClick={() => setAdvisoryMode(value)}
+                  className={`p-3 rounded-xl border-2 font-bold ${advisoryMode === value ? 'border-emerald-600 bg-emerald-50 text-emerald-800' : 'border-gray-200'}`}>
+                  {icon} {label}
+                </button>
+              ))}
+            </div>
+
+            <button onClick={generateAdvisory} className="w-full mt-5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-lg">
+              सलाह तैयार करें
+            </button>
+
+            {advisoryResult && (
+              <div className="mt-5 bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                <div className="flex justify-between items-center gap-3">
+                  <h4 className="font-bold text-lg text-emerald-900">{advisoryResult.title}</h4>
+                </div>
+                <ul className="mt-3 space-y-2 text-sm text-gray-700">
+                  {advisoryResult.points.map((point,i) => <li key={i}>✓ {point}</li>)}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* WEATHER MODAL */}
+      {activeModal === 'weather' && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl">
+            <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 text-gray-400 text-xl w-8 h-8 rounded-full bg-gray-100">✕</button>
+            <h3 className="text-2xl font-bold text-blue-800">🌤️ लाइव मौसम जानकारी</h3>
+            <p className="text-sm text-gray-500 mt-1 mb-5">{currentUser?.state}</p>
+            {weatherLoading ? <div className="text-center py-10">मौसम डेटा लोड हो रहा है...</div> :
+             weather ? <>
+              <div className="bg-blue-50 rounded-xl p-5 text-center">
+                <div className="text-5xl font-bold text-blue-800">{Math.round(weather.current.temperature_2m)}°C</div>
+                <div className="font-semibold mt-1">{weatherText(weather.current.weather_code)}</div>
+                <div className="text-sm text-gray-600 mt-2">नमी: {weather.current.relative_humidity_2m}% · हवा: {Math.round(weather.current.wind_speed_10m)} km/h · बारिश: {weather.current.precipitation} mm</div>
+              </div>
+              <div className="grid grid-cols-3 gap-3 mt-4">
+                {weather.daily.time.map((day,i) => (
+                  <div key={day} className="border rounded-xl p-3 text-center">
+                    <div className="font-bold">{new Date(day).toLocaleDateString('hi-IN',{weekday:'short'})}</div>
+                    <div className="text-sm mt-1">↑ {Math.round(weather.daily.temperature_2m_max[i])}°</div>
+                    <div className="text-sm">↓ {Math.round(weather.daily.temperature_2m_min[i])}°</div>
+                    <div className="text-xs text-blue-700 mt-1">🌧️ {weather.daily.precipitation_probability_max[i]}%</div>
+                  </div>
+                ))}
+              </div>
+             </> :
+             <div className="bg-amber-50 p-4 rounded-xl text-amber-800">मौसम डेटा उपलब्ध नहीं है। इंटरनेट कनेक्शन जांचें।</div>}
+          </div>
+        </div>
+      )}
 
       {/* MODAL 1: CROP HEALTH */}
       {activeModal === 'cropHealth' && (
@@ -519,7 +697,7 @@ export default function App() {
 
               <div className="bg-teal-50 p-4 rounded-xl border border-teal-200">
                 <h4 className="font-bold text-teal-900 mb-1">पीएम-किसान सम्मान निधि</h4>
-                <p className="text-xs text-teal-800">अगली किश्त (Installment) स्थिति: <span class="font-bold text-emerald-700">स्वीकृत (Approved)</span></p>
+                <p className="text-xs text-teal-800">अगली किश्त (Installment) स्थिति: <span className="font-bold text-emerald-700">स्वीकृत (Approved)</span></p>
               </div>
 
               <button 
