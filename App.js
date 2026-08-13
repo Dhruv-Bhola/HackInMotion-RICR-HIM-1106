@@ -14,6 +14,8 @@ export default function App() {
   const [recommendationSoil, setRecommendationSoil] = useState('दोमट');
   const [recommendationSeason, setRecommendationSeason] = useState('खरीफ');
   const [recommendationResult, setRecommendationResult] = useState(null);
+  const [schemeCrop, setSchemeCrop] = useState('');
+  const [schemeResult, setSchemeResult] = useState(null);
   const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
 
@@ -180,6 +182,59 @@ export default function App() {
       season: recommendationSeason,
       soil: recommendationSoil,
       tip: tips[selected] || 'मृदा जांच और स्थानीय कृषि सलाह के अनुसार अंतिम चयन करें।'
+    });
+  };
+
+  const findGovernmentScheme = () => {
+    const crop = schemeCrop;
+
+    const data = {
+      'धान': ['PMFBY', 'प्रधानमंत्री फसल बीमा योजना (PMFBY)', 'फसल बीमा',
+        'धान जैसी खाद्यान्न फसल के लिए अधिसूचित क्षेत्र में प्राकृतिक आपदाओं और अन्य covered crop risks से सुरक्षा।',
+        ['खरीफ foodgrain/oilseed crops में किसान premium सामान्यतः 2% of Sum Insured या actuarial rate में जो कम हो।', 'सूखा, बाढ़, तूफान, ओलावृष्टि, pests/diseases जैसे covered risks।', 'निर्धारित localized calamity और post-harvest loss provisions।']],
+      'गेहूं': ['PMFBY', 'प्रधानमंत्री फसल बीमा योजना (PMFBY)', 'फसल बीमा',
+        'गेहूं रबी खाद्यान्न फसल है; notified crop/area में crop-loss protection के लिए PMFBY सबसे relevant है।',
+        ['रबी foodgrain/oilseed crops में किसान premium सामान्यतः 1.5% of Sum Insured या actuarial rate में जो कम हो।', 'Covered natural calamity, pests/diseases और weather risks से protection।', 'निर्धारित localized और post-harvest loss provisions।']],
+      'मक्का': ['PMFBY', 'प्रधानमंत्री फसल बीमा योजना (PMFBY)', 'फसल बीमा',
+        'मक्का खाद्यान्न फसल है और notified area में crop-risk protection के लिए PMFBY relevant है।',
+        ['Notified crop/area में covered crop losses के लिए insurance protection।', 'Season के अनुसार लागू farmer premium।', 'Natural calamity और अन्य notified risks के लिए claim provisions।']],
+      'सोयाबीन': ['PMFBY', 'प्रधानमंत्री फसल बीमा योजना (PMFBY)', 'फसल बीमा',
+        'सोयाबीन खरीफ oilseed crop है; notified होने पर PMFBY weather और covered crop risks से सुरक्षा देता है।',
+        ['खरीफ foodgrain/oilseed crops में किसान premium सामान्यतः 2% तक।', 'सूखा, flood, storm, hailstorm, pests/diseases जैसे covered risks।', 'Localized calamity और निर्धारित post-harvest provisions।']],
+      'चना': ['PMFBY', 'प्रधानमंत्री फसल बीमा योजना (PMFBY)', 'फसल बीमा',
+        'चना रबी pulse crop है; notified होने पर crop-risk protection के लिए PMFBY सबसे relevant है।',
+        ['रबी foodgrain/oilseed crops में किसान premium सामान्यतः 1.5% तक।', 'Covered natural calamities और pests/diseases से protection।', 'Localized और post-harvest loss provisions।']],
+      'सरसों': ['PMFBY', 'प्रधानमंत्री फसल बीमा योजना (PMFBY)', 'फसल बीमा',
+        'सरसों oilseed crop है; notified area में PMFBY crop-loss protection के लिए relevant है।',
+        ['रबी oilseed crop के लिए किसान premium सामान्यतः 1.5% तक।', 'Covered weather/natural risks से insurance protection।', 'Localized और post-harvest provisions।']],
+      'कपास': ['PMFBY', 'प्रधानमंत्री फसल बीमा योजना (PMFBY)', 'फसल बीमा',
+        'कपास commercial crop है; notified area में crop-risk cover के लिए PMFBY उपयोगी है।',
+        ['Annual commercial/horticultural crops में farmer premium सामान्यतः 5% या actuarial rate में जो कम हो।', 'Covered natural/weather risks से protection।', 'निर्धारित localized/post-harvest provisions।']],
+      'टमाटर': ['e-NAM', 'National Agriculture Market (e-NAM)', 'कृषि विपणन',
+        'टमाटर जैसी horticulture produce के लिए अधिक buyers, market access और better price discovery e-NAM का मुख्य लाभ है।',
+        ['More buyers और markets तक पहुंच।', 'Transparent bidding और better price discovery।', 'Real-time mandi prices/arrivals और online payments।']],
+      'आलू': ['e-NAM', 'National Agriculture Market (e-NAM)', 'कृषि विपणन',
+        'आलू के लिए market access, transparent bidding और price discovery पर e-NAM का सीधा लाभ है।',
+        ['More buyers/markets।', 'Quality-based assaying और transparent bidding।', 'Real-time market information और electronic payment।']],
+      'सब्जियां': ['e-NAM', 'National Agriculture Market (e-NAM)', 'कृषि विपणन',
+        'सब्जियों के लिए अधिक buyers और बेहतर price discovery पर e-NAM का मुख्य लाभ है।',
+        ['More buyers और markets।', 'Transparent bidding।', 'Real-time price/arrival information और e-payment।']]
+    };
+
+    const item = data[crop] || ['PM-KISAN', 'प्रधानमंत्री किसान सम्मान निधि (PM-KISAN)', 'आय सहायता',
+      'यह crop-specific insurance नहीं है; eligible land-holding farmer families को income support देता है।',
+      ['₹6,000 प्रति वर्ष तीन बराबर installments में।', 'लाभ सीधे beneficiary bank account में transfer।', 'Registered farmers के लिए eKYC mandatory है।']];
+
+    setSchemeResult({
+      code: item[0], name: item[1], category: item[2], why: item[3], benefits: item[4],
+      eligibility: item[0] === 'PM-KISAN'
+        ? 'Land-holding farmer families scheme guidelines और exclusion criteria के अनुसार eligible होनी चाहिए।'
+        : 'Crop/area का राज्य द्वारा notified होना और संबंधित scheme की लागू eligibility conditions पूरी होना जरूरी है।',
+      apply: item[0] === 'PM-KISAN'
+        ? 'Official PM-KISAN portal पर New Farmer Registration और Know Your Status उपलब्ध है।'
+        : item[0] === 'e-NAM'
+          ? 'Official e-NAM portal/app या संबंधित e-NAM mandi/APMC के माध्यम से farmer registration करें।'
+          : 'Official PMFBY Farmer Corner से crop insurance application, premium calculation और application status देखें।'
     });
   };
 
@@ -534,7 +589,7 @@ export default function App() {
               <h3 className="text-2xl font-bold text-gray-800 font-['Tiro_Devanagari_Hindi',serif] flex items-center gap-2 mb-2">
                 ✨ स्मार्ट सुविधाएं
               </h3>
-              <p className="text-gray-600 mb-5">Kisan Mitra की अतिरिक्त सुविधाएं एक ही जगह पर इस्तेमाल करें।</p>
+              <p className="text-gray-600 mb-5">CropCare की अतिरिक्त सुविधाएं एक ही जगह पर इस्तेमाल करें।</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 <div onClick={() => { setAdvisoryCrop(currentUser.crop); setAdvisoryResult(null); setActiveModal('advisory'); }}
@@ -544,10 +599,17 @@ export default function App() {
                   <p className="text-sm text-gray-600 mt-1">किफायती, टिकाऊ या संतुलित खेती योजना पाएं।</p>
                 </div>
 
+                <div onClick={() => { setSchemeCrop(''); setSchemeResult(null); setActiveModal('schemes'); }}
+                  className="bg-white rounded-2xl p-5 border-2 border-orange-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
+                  <div className="text-3xl mb-3">🏛️</div>
+                  <h4 className="font-bold text-lg">सरकारी योजनाएँ</h4>
+                  <p className="text-sm text-gray-600 mt-1">फसल चुनें और सबसे relevant सरकारी योजना की जानकारी पाएं।</p>
+                </div>
+
                 <div onClick={() => { setRecommendationCrop(''); setRecommendationResult(null); setActiveModal('recommendation'); }}
                   className="bg-white rounded-2xl p-5 border-2 border-lime-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
                   <div className="text-3xl mb-3">🌾</div>
-                  <h4 className="font-bold text-lg">मुझे कौन सी फसल बोनी चाहिए?</h4>
+                  <h4 className="font-bold text-lg">मुझे कौन सी फसल बोनी चाहिए</h4>
                   <p className="text-sm text-gray-600 mt-1">मिट्टी और मौसम/सीजन के अनुसार उपयुक्त फसल चुनें।</p>
                 </div>
 
@@ -573,6 +635,70 @@ export default function App() {
       </footer>
 
       {/* MODAL POPUPS */}
+
+      {/* GOVERNMENT SCHEMES MODAL */}
+      {activeModal === 'schemes' && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-3xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 text-gray-400 text-xl w-8 h-8 rounded-full bg-gray-100">✕</button>
+            <div className="text-center mb-6">
+              <div className="text-4xl mb-2">🏛️</div>
+              <h3 className="text-2xl font-bold text-orange-800">Government Scheme Finder</h3>
+              <p className="text-sm text-gray-500 mt-1">अपनी फसल चुनें और सबसे relevant सरकारी योजना देखें।</p>
+            </div>
+
+            <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 mb-5">
+              <label className="block text-sm font-semibold text-orange-900 mb-2">Crop Select करें</label>
+              <select value={schemeCrop} onChange={e => { setSchemeCrop(e.target.value); setSchemeResult(null); }}
+                className="w-full px-4 py-3 border rounded-lg bg-white">
+                <option value="">-- अपनी फसल चुनें --</option>
+                <option>धान</option><option>गेहूं</option><option>मक्का</option><option>सोयाबीन</option>
+                <option>चना</option><option>सरसों</option><option>कपास</option><option>टमाटर</option>
+                <option>आलू</option><option>सब्जियां</option>
+              </select>
+            </div>
+
+            <button disabled={!schemeCrop} onClick={findGovernmentScheme}
+              className="w-full bg-orange-700 hover:bg-orange-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg">
+              🔎 Best Scheme खोजें
+            </button>
+
+            {schemeResult && (
+              <div className="mt-6 bg-green-50 border-2 border-green-200 rounded-2xl p-5">
+                <span className="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">BEST MATCH</span>
+                <h4 className="text-xl font-bold text-green-900 mt-2">{schemeResult.name}</h4>
+                <p className="text-sm text-green-700 mt-1">{schemeResult.category}</p>
+
+                <div className="mt-4">
+                  <h5 className="font-bold text-gray-800">Why this scheme?</h5>
+                  <p className="text-sm text-gray-700 mt-1">{schemeResult.why}</p>
+                </div>
+
+                <div className="mt-4">
+                  <h5 className="font-bold text-gray-800">Benefits</h5>
+                  <ul className="mt-2 space-y-2 text-sm text-gray-700">
+                    {schemeResult.benefits.map((b, i) => <li key={i}>✓ {b}</li>)}
+                  </ul>
+                </div>
+
+                <div className="mt-4 bg-white rounded-xl p-4 border">
+                  <h5 className="font-bold text-gray-800">Eligibility</h5>
+                  <p className="text-sm text-gray-700 mt-1">{schemeResult.eligibility}</p>
+                </div>
+
+                <div className="mt-4 bg-white rounded-xl p-4 border">
+                  <h5 className="font-bold text-gray-800">How to apply</h5>
+                  <p className="text-sm text-gray-700 mt-1">{schemeResult.apply}</p>
+                </div>
+
+                <div className="mt-4 text-xs text-gray-500">
+                  * यह crop-based recommendation है। Final eligibility, notified crop/area, season और application rules official government portal पर verify करें।
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* CROP RECOMMENDATION MODAL */}
       {activeModal === 'recommendation' && (
