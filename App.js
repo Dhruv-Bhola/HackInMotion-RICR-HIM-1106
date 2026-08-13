@@ -10,6 +10,10 @@ export default function App() {
   const [advisoryCrop, setAdvisoryCrop] = useState('');
   const [advisorySoil, setAdvisorySoil] = useState('दोमट');
   const [advisoryResult, setAdvisoryResult] = useState(null);
+  const [recommendationCrop, setRecommendationCrop] = useState('');
+  const [recommendationSoil, setRecommendationSoil] = useState('दोमट');
+  const [recommendationSeason, setRecommendationSeason] = useState('खरीफ');
+  const [recommendationResult, setRecommendationResult] = useState(null);
   const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
 
@@ -81,7 +85,7 @@ export default function App() {
     const place = stateCoordinates[stateName] || stateCoordinates['मध्य प्रदेश'];
     setWeatherLoading(true);
     try {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${place.lat}&longitude=${place.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=3`;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${place.lat}&longitude=${place.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,weather_code&timezone=auto&forecast_days=7`;
       const response = await fetch(url);
       if (!response.ok) throw new Error('Weather request failed');
       setWeather(await response.json());
@@ -129,6 +133,54 @@ export default function App() {
       }
     };
     setAdvisoryResult(advice[advisoryMode]);
+  };
+
+  const generateCropRecommendation = () => {
+    const cropMap = {
+      'खरीफ': {
+        'दोमट': ['धान', 'मक्का', 'सोयाबीन'],
+        'चिकनी मिट्टी': ['धान', 'अरहर', 'मक्का'],
+        'बलुई मिट्टी': ['मक्का', 'बाजरा', 'मूंग']
+      },
+      'रबी': {
+        'दोमट': ['गेहूं', 'चना', 'सरसों'],
+        'चिकनी मिट्टी': ['गेहूं', 'चना', 'मसूर'],
+        'बलुई मिट्टी': ['सरसों', 'चना', 'जौ']
+      },
+      'जायद': {
+        'दोमट': ['मूंग', 'मक्का', 'तरबूज'],
+        'चिकनी मिट्टी': ['मूंग', 'खीरा', 'मक्का'],
+        'बलुई मिट्टी': ['तरबूज', 'खरबूजा', 'मूंग']
+      }
+    };
+
+    const crops = cropMap[recommendationSeason][recommendationSoil];
+    const selected = recommendationCrop || crops[0];
+
+    const tips = {
+      'धान': 'पानी की उपलब्धता अच्छी हो तो धान उपयुक्त है। खेत में जल निकास रखें।',
+      'मक्का': 'मक्का के लिए अच्छी जल निकासी और पर्याप्त धूप जरूरी है।',
+      'सोयाबीन': 'सोयाबीन में जलभराव से बचें और शुरुआती अवस्था में खरपतवार नियंत्रण करें।',
+      'गेहूं': 'समय पर बुवाई और संतुलित सिंचाई से अच्छी उपज मिल सकती है।',
+      'चना': 'चना कम पानी वाली रबी फसल के लिए अच्छा विकल्प है; जलभराव से बचाएं।',
+      'सरसों': 'सरसों को अच्छी जल निकासी वाली मिट्टी और ठंडे मौसम में अच्छा प्रदर्शन मिलता है।',
+      'मूंग': 'मूंग कम अवधि की फसल है और जायद मौसम में अच्छा विकल्प हो सकती है।',
+      'बाजरा': 'बाजरा गर्म और अपेक्षाकृत कम वर्षा वाले क्षेत्रों के लिए उपयोगी है।',
+      'अरहर': 'अरहर में जलभराव से बचाना जरूरी है।',
+      'मसूर': 'मसूर के लिए हल्की सिंचाई और अच्छी जल निकासी रखें।',
+      'जौ': 'जौ अपेक्षाकृत कम पानी में भी उगाया जा सकता है।',
+      'तरबूज': 'तरबूज के लिए गर्म मौसम, धूप और अच्छी जल निकासी जरूरी है।',
+      'खरबूजा': 'खरबूजे के लिए गर्म मौसम और अच्छी जल निकासी बेहतर रहती है।',
+      'खीरा': 'खीरे में नियमित सिंचाई और पर्याप्त धूप रखें।'
+    };
+
+    setRecommendationResult({
+      selected,
+      alternatives: crops.filter(c => c !== selected),
+      season: recommendationSeason,
+      soil: recommendationSoil,
+      tip: tips[selected] || 'मृदा जांच और स्थानीय कृषि सलाह के अनुसार अंतिम चयन करें।'
+    });
   };
 
   const handleLogout = () => {
@@ -482,7 +534,7 @@ export default function App() {
               <h3 className="text-2xl font-bold text-gray-800 font-['Tiro_Devanagari_Hindi',serif] flex items-center gap-2 mb-2">
                 ✨ स्मार्ट सुविधाएं
               </h3>
-              <p className="text-gray-600 mb-5">CropCare की अतिरिक्त सुविधाएं एक ही जगह पर इस्तेमाल करें।</p>
+              <p className="text-gray-600 mb-5">Kisan Mitra की अतिरिक्त सुविधाएं एक ही जगह पर इस्तेमाल करें।</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 <div onClick={() => { setAdvisoryCrop(currentUser.crop); setAdvisoryResult(null); setActiveModal('advisory'); }}
@@ -490,6 +542,13 @@ export default function App() {
                   <div className="text-3xl mb-3">🎯</div>
                   <h4 className="font-bold text-lg">फसल सलाह</h4>
                   <p className="text-sm text-gray-600 mt-1">किफायती, टिकाऊ या संतुलित खेती योजना पाएं।</p>
+                </div>
+
+                <div onClick={() => { setRecommendationCrop(''); setRecommendationResult(null); setActiveModal('recommendation'); }}
+                  className="bg-white rounded-2xl p-5 border-2 border-lime-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
+                  <div className="text-3xl mb-3">🌾</div>
+                  <h4 className="font-bold text-lg">मुझे कौन सी फसल बोनी चाहिए?</h4>
+                  <p className="text-sm text-gray-600 mt-1">मिट्टी और मौसम/सीजन के अनुसार उपयुक्त फसल चुनें।</p>
                 </div>
 
                 <div onClick={() => { fetchWeather(currentUser.state); setActiveModal('weather'); }}
@@ -514,6 +573,55 @@ export default function App() {
       </footer>
 
       {/* MODAL POPUPS */}
+
+      {/* CROP RECOMMENDATION MODAL */}
+      {activeModal === 'recommendation' && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl">
+            <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 text-gray-400 text-xl w-8 h-8 rounded-full bg-gray-100">✕</button>
+            <div className="text-center mb-5">
+              <div className="text-4xl mb-2">🌾</div>
+              <h3 className="text-2xl font-bold text-lime-800">Crop Recommendation</h3>
+              <p className="text-sm text-gray-500 mt-1">मिट्टी और सीजन के अनुसार उपयुक्त फसल का सुझाव।</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Season</label>
+                <select value={recommendationSeason} onChange={e => setRecommendationSeason(e.target.value)} className="w-full px-3 py-2.5 border rounded-lg">
+                  <option>खरीफ</option><option>रबी</option><option>जायद</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Soil Type</label>
+                <select value={recommendationSoil} onChange={e => setRecommendationSoil(e.target.value)} className="w-full px-3 py-2.5 border rounded-lg">
+                  <option>दोमट</option><option>चिकनी मिट्टी</option><option>बलुई मिट्टी</option>
+                </select>
+              </div>
+            </div>
+
+            <button onClick={generateCropRecommendation} className="w-full mt-5 bg-lime-700 hover:bg-lime-800 text-white font-bold py-3 rounded-lg">
+              🌾 Recommend Crops
+            </button>
+
+            {recommendationResult && (
+              <div className="mt-5 bg-lime-50 border border-lime-200 rounded-xl p-5">
+                <h4 className="font-bold text-lg text-lime-900">Recommended Crop: {recommendationResult.selected}</h4>
+                <p className="text-sm text-gray-700 mt-2">Season: <strong>{recommendationResult.season}</strong> · Soil: <strong>{recommendationResult.soil}</strong></p>
+                <p className="text-sm text-gray-700 mt-3">💡 {recommendationResult.tip}</p>
+                <div className="mt-4">
+                  <div className="font-semibold mb-2">Other suitable options</div>
+                  <div className="flex flex-wrap gap-2">
+                    {recommendationResult.alternatives.map(crop => (
+                      <span key={crop} className="px-3 py-1 bg-white border border-lime-300 rounded-full text-sm">{crop}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* SMART ADVISORY MODAL */}
       {activeModal === 'advisory' && (
