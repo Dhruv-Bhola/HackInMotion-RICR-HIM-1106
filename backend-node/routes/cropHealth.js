@@ -1,7 +1,7 @@
 // backend-node/routes/cropHealth.js
 const express = require("express");
 const multer = require("multer");
-const FormData = require("form-data");
+
 const fs = require("fs");
 const path = require("path");
 const authMiddleware = require("../middleware/auth");
@@ -61,23 +61,40 @@ router.post("/analyze", authMiddleware, upload.single("image"), async (req, res)
     const cropId = CROP_MAP[cropInput] || cropInput.toLowerCase();
 
     // ✅ Use environment variable, fallback to localhost for dev
-    const flaskUrl = `${process.env.FLASK_API_URL || "http://localhost:5001"}/api/analyze`;
+    const flaskBaseUrl =
+     process.env.FLASK_API_URL || "http://localhost:5001";
+
+    const flaskUrl = `${flaskBaseUrl.replace(/\/$/, "")}/api/analyze`;
     
     console.log(`Forwarding to Flask: ${flaskUrl}`);
 
-    const form = new FormData();
-    form.append("image", fs.createReadStream(savedPath), {
-      filename: req.file.originalname,
-      contentType: req.file.mimetype
-    });
-    form.append("crop", cropId);
+const imageBuffer = await fs.promises.readFile(savedPath);
 
-    const flaskResponse = await fetch(flaskUrl, {
-      method: "POST",
-      body: form,
-      headers: form.getHeaders(),
-      timeout: 30000  // 30 second timeout
-    });
+const form = new FormData();
+
+form.append(
+  "image",
+  new Blob([imageBuffer], {
+    type: req.file.mimetype
+  }),
+  req.file.originalname
+);
+
+form.append("crop", cropId);
+
+console.log("→ Sending image to Flask:", {
+  url: flaskUrl,
+  crop: cropId,
+  filename: req.file.originalname,
+  mimetype: req.file.mimetype,
+  size: imageBuffer.length
+});
+
+const flaskResponse = await fetch(flaskUrl, {
+  method: "POST",
+  body: form,
+  signal: AbortSignal.timeout(30000)
+});
 
     if (!flaskResponse.ok) {
       const errText = await flaskResponse.text();
