@@ -4,6 +4,13 @@ import React, { useState, useEffect } from 'react';
 import CropHealthModal from '@/components/CropHealthModal';
 import { loginUser, registerUser, getStoredUser, setAuth, clearAuth } from '@/lib/api';
 
+const DEFAULT_GUEST_USER = {
+  name: 'अतिथि किसान (Guest)',
+  crop: 'गेहूं',
+  state: 'मध्य प्रदेश',
+  isGuest: true
+};
+
 export default function App() {
   // States
   const [currentUser, setCurrentUser] = useState(null);
@@ -39,7 +46,7 @@ export default function App() {
     if (user) {
       setCurrentUser(user);
       setActiveSection('dashboard');
-      fetchWeather(user.state);
+      fetchWeather(user.state || 'मध्य प्रदेश');
     }
   }, []);
 
@@ -69,6 +76,13 @@ export default function App() {
     } catch (err) {
       alert(err.message || 'पंजीकरण विफल। कृपया पुनः प्रयास करें।');
     }
+  };
+
+  // Guest Access Handler (No API call, no authentication token required)
+  const handleProceedWithoutLogin = () => {
+    setCurrentUser(DEFAULT_GUEST_USER);
+    setActiveSection('dashboard');
+    fetchWeather(DEFAULT_GUEST_USER.state);
   };
 
   const stateCoordinates = {
@@ -265,28 +279,36 @@ export default function App() {
           </div>
 
           {!currentUser ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
               <button 
                 onClick={() => setActiveSection('login')} 
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition border border-emerald-500"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold transition border border-emerald-500"
               >
                 <i className="fa-solid fa-right-to-bracket mr-1"></i> लॉगिन करें
               </button>
               <button 
                 onClick={() => setActiveSection('register')} 
-                className="bg-amber-500 hover:bg-amber-600 text-emerald-950 px-4 py-2 rounded-lg text-sm font-semibold transition shadow"
+                className="bg-amber-500 hover:bg-amber-600 text-emerald-950 px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold transition shadow"
               >
                 <i className="fa-solid fa-user-plus mr-1"></i> नया खाता बनाएं
+              </button>
+              <button
+                onClick={handleProceedWithoutLogin}
+                className="bg-white/10 hover:bg-white/20 text-emerald-100 border border-white/30 px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold transition"
+              >
+                बिना लॉगिन आगे बढ़ें
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-4">
-              <span className="text-emerald-100 font-medium">किसान: {currentUser.name}</span>
+              <span className="text-emerald-100 font-medium">
+                {currentUser.isGuest ? 'अतिथि किसान (Guest)' : `किसान: ${currentUser.name}`}
+              </span>
               <button 
                 onClick={handleLogout} 
                 className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition"
               >
-                <i className="fa-solid fa-power-off mr-1"></i> लॉगआउट
+                <i className="fa-solid fa-power-off mr-1"></i> {currentUser.isGuest ? 'बाहर निकलें' : 'लॉगआउट'}
               </button>
             </div>
           )}
@@ -315,6 +337,17 @@ export default function App() {
                 </button>
                 <button onClick={() => setActiveSection('register')} className="bg-amber-500 hover:bg-amber-400 text-emerald-950 px-8 py-3.5 rounded-xl text-lg font-bold shadow-xl transition flex items-center justify-center gap-2">
                   <i className="fa-solid fa-id-card"></i> नया किसान पंजीकरण
+                </button>
+              </div>
+
+              {/* Proceed Without Login on Landing */}
+              <div className="pt-2">
+                <button 
+                  onClick={handleProceedWithoutLogin}
+                  className="text-gray-200 hover:text-white underline underline-offset-4 text-sm font-semibold transition inline-flex items-center gap-1.5"
+                >
+                  <span>Proceed Without Login / बिना लॉगिन सीधे मुख्य पेज पर जाएं</span>
+                  <i className="fa-solid fa-arrow-right text-xs"></i>
                 </button>
               </div>
             </div>
@@ -374,7 +407,19 @@ export default function App() {
                 </button>
               </form>
 
-              <div className="mt-6 text-center text-sm text-gray-600">
+              {/* GUEST ACCESS OPTION */}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <button 
+                  type="button"
+                  onClick={handleProceedWithoutLogin}
+                  className="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-2 border-emerald-300 font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <i className="fa-solid fa-angles-right"></i>
+                  Proceed Without Login (बिना लॉगिन आगे बढ़ें)
+                </button>
+              </div>
+
+              <div className="mt-4 text-center text-sm text-gray-600">
                 खाता नहीं है? {' '}
                 <button onClick={() => setActiveSection('register')} className="text-emerald-700 font-bold hover:underline">
                   यहाँ नया पंजीकरण करें
@@ -480,7 +525,19 @@ export default function App() {
                 </button>
               </form>
 
-              <div className="mt-6 text-center text-sm text-gray-600">
+              {/* GUEST ACCESS OPTION IN REGISTRATION */}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <button 
+                  type="button"
+                  onClick={handleProceedWithoutLogin}
+                  className="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-2 border-emerald-300 font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <i className="fa-solid fa-angles-right"></i>
+                  Proceed Without Login (बिना पंजीकरण आगे बढ़ें)
+                </button>
+              </div>
+
+              <div className="mt-4 text-center text-sm text-gray-600">
                 पहले से खाता है? {' '}
                 <button onClick={() => setActiveSection('login')} className="text-emerald-700 font-bold hover:underline">
                   यहाँ लॉगिन करें
@@ -490,23 +547,30 @@ export default function App() {
           </section>
         )}
 
-        {/* 4. DASHBOARD SECTION */}
+        {/* 4. DASHBOARD SECTION (MAIN / SECOND PAGE) */}
         {activeSection === 'dashboard' && currentUser && (
           <section className="max-w-7xl mx-auto px-4 py-8">
             <div className="bg-gradient-to-r from-emerald-800 to-teal-700 rounded-2xl p-6 md:p-8 text-white mb-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
               <div>
-                <span className="bg-emerald-600 text-emerald-100 text-xs px-3 py-1 rounded-full uppercase font-bold tracking-wider">सक्रिय किसान प्रोफ़ाइल</span>
+                <span className="bg-emerald-600 text-emerald-100 text-xs px-3 py-1 rounded-full uppercase font-bold tracking-wider">
+                  {currentUser.isGuest ? 'अतिथि मोड (Guest Mode)' : 'सक्रिय किसान प्रोफ़ाइल'}
+                </span>
                 <h2 className="text-3xl md:text-4xl font-bold font-['Tiro_Devanagari_Hindi',serif] mt-2">
                   नमस्ते, {currentUser.name} जी!
                 </h2>
                 <p className="text-emerald-200 text-base mt-1">
-                  मुख्य फसल: {currentUser.crop} | राज्य: {currentUser.state}
+                  मुख्य फसल: {currentUser.crop || 'गेहूं'} | राज्य: {currentUser.state || 'मध्य प्रदेश'}
                 </p>
               </div>
               <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 text-center min-w-[200px]">
                 <p className="text-xs text-emerald-200">आज का मौसम पूर्वानुमान</p>
-                <p className="text-2xl font-bold mt-1"><i className="fa-solid fa-cloud-sun text-amber-300 mr-2"></i>28°C</p>
-                <p className="text-xs text-emerald-100">साफ मौसम (सिंचाई हेतु अनुकूल)</p>
+                <p className="text-2xl font-bold mt-1">
+                  <i className="fa-solid fa-cloud-sun text-amber-300 mr-2"></i>
+                  {weather ? `${Math.round(weather.current.temperature_2m)}°C` : '28°C'}
+                </p>
+                <p className="text-xs text-emerald-100">
+                  {weather ? weatherText(weather.current.weather_code) : 'साफ मौसम (सिंचाई हेतु अनुकूल)'}
+                </p>
               </div>
             </div>
 
@@ -589,7 +653,7 @@ export default function App() {
               <p className="text-gray-600 mb-5">CropCare की अतिरिक्त सुविधाएं एक ही जगह पर इस्तेमाल करें।</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                <div onClick={() => { setAdvisoryCrop(currentUser.crop); setAdvisoryResult(null); setActiveModal('advisory'); }}
+                <div onClick={() => { setAdvisoryCrop(currentUser.crop || 'गेहूं'); setAdvisoryResult(null); setActiveModal('advisory'); }}
                   className="bg-white rounded-2xl p-5 border-2 border-sky-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
                   <div className="text-3xl mb-3">🎯</div>
                   <h4 className="font-bold text-lg">फसल सलाह</h4>
@@ -610,13 +674,12 @@ export default function App() {
                   <p className="text-sm text-gray-600 mt-1">मिट्टी और मौसम/सीजन के अनुसार उपयुक्त फसल चुनें।</p>
                 </div>
 
-                <div onClick={() => { fetchWeather(currentUser.state); setActiveModal('weather'); }}
+                <div onClick={() => { fetchWeather(currentUser.state || 'मध्य प्रदेश'); setActiveModal('weather'); }}
                   className="bg-white rounded-2xl p-5 border-2 border-blue-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
                   <div className="text-3xl mb-3">🌤️</div>
                   <h4 className="font-bold text-lg">मौसम</h4>
                   <p className="text-sm text-gray-600 mt-1">वर्तमान और 3 दिन का मौसम पूर्वानुमान।</p>
                 </div>
-
 
               </div>
             </div>
@@ -632,8 +695,6 @@ export default function App() {
       </footer>
 
       {/* MODAL POPUPS */}
-
-      {/* GOVERNMENT SCHEMES MODAL */}
       {activeModal === 'schemes' && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-3xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -697,7 +758,6 @@ export default function App() {
         </div>
       )}
 
-      {/* CROP RECOMMENDATION MODAL */}
       {activeModal === 'recommendation' && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl">
@@ -746,7 +806,6 @@ export default function App() {
         </div>
       )}
 
-      {/* SMART ADVISORY MODAL */}
       {activeModal === 'advisory' && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -798,13 +857,12 @@ export default function App() {
         </div>
       )}
 
-      {/* WEATHER MODAL */}
       {activeModal === 'weather' && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl">
             <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 text-gray-400 text-xl w-8 h-8 rounded-full bg-gray-100">✕</button>
             <h3 className="text-2xl font-bold text-blue-800">🌤️ लाइव मौसम जानकारी</h3>
-            <p className="text-sm text-gray-500 mt-1 mb-5">{currentUser?.state}</p>
+            <p className="text-sm text-gray-500 mt-1 mb-5">{currentUser?.state || 'मध्य प्रदेश'}</p>
             {weatherLoading ? <div className="text-center py-10">मौसम डेटा लोड हो रहा है...</div> :
              weather ? <>
               <div className="bg-blue-50 rounded-xl p-5 text-center">
@@ -831,11 +889,10 @@ export default function App() {
       {activeModal === 'cropHealth' && (
         <CropHealthModal
           onClose={() => setActiveModal(null)}
-          userCrop={currentUser?.crop}
+          userCrop={currentUser?.crop || 'गेहूं'}
         />
       )}
 
-      {/* MODAL 2: REPORT */}
       {activeModal === 'report' && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -891,7 +948,6 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL 3: MARKET */}
       {activeModal === 'market' && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-3xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
