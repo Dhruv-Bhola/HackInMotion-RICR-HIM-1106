@@ -1,43 +1,69 @@
-# 🌾 Smart Farm Decision Support System
+# Kisan Mitra - Smart Farming Decision Support System
 
-> **Because a farmer's biggest risk isn't hard work — it's making the wrong decision at the wrong time.**
+> **Because a farmer's biggest risk isn't hard work - it's making the wrong decision at the wrong time.**
+Kisan Mitra is a full-stack, AI-powered agricultural decision support platform that brings **weather intelligence, irrigation recommendations, crop-health monitoring, market-price insights, crop recommendation, government scheme discovery, and farm-specific actions** into one simple dashboard.
 
-A full-stack, AI-powered agricultural decision support platform that brings **weather intelligence, irrigation recommendations, crop-health monitoring, market-price insights, and farm-specific actions** into one simple dashboard.
+## **"What should I do on my farm today?"**
 
-The goal is not to show farmers more data. The goal is to answer one practical question:
+# Project Status
 
-## **“What should I do on my farm today?”**
+Kisan Mitra separates implemented modules from planned improvements so that
+the current product scope remains clear.
 
----
+## Implemented vs Future
 
-## 🚀 Problem
+| Feature | Status |
+|---|---|
+| Farmer authentication | Implemented |
+| Farm profile | Implemented |
+| Weather information | Implemented |
+| Irrigation recommendation | Implemented |
+| Weather risk alerts | Implemented |
+| AI-assisted crop health screening | Implemented |
+| Market price insights | Implemented |
+| Crop recommendation | Implemented |
+| Government schemes recommendation | Implemented |
+| Unified farmer dashboard | Implemented |
+| Today's Farm Actions | Implemented |
+| Voice assistant | Future |
+| Community pest and disease alerts | Future |
+| Fertilizer and resource planning | Future |
+| Yield prediction | Future |
+
+# Live Website
+
+The deployed Kisan Mitra application is available online and is designed to
+work across mobile phones, tablets, laptops, and desktop devices.
+
+[Open Kisan Mitra - Live Website](https://kisanmitraaaa.netlify.app/)
+
+# Project Model Demo
+
+A demonstration of the Kisan Mitra farmer-support model is available on YouTube.
+
+[Watch the Project Model on YouTube](https://youtu.be/APx-VRcGBFY)
+
+# Problem
 
 Farmers continuously make high-impact decisions:
-
 - Which crop should I grow?
 - Should I irrigate today or wait for rain?
 - Is upcoming weather dangerous for my crop?
 - Is a crop showing signs of disease or pest damage?
 - Should I sell now or wait for a better market price?
-
 Relevant information exists across weather services, agricultural resources, mandi/market data, and crop-health information, but it is fragmented and often difficult to convert into an immediate action.
-
 A wrong decision at the wrong time can lead to:
-
 - unnecessary irrigation and water wastage
 - crop damage from extreme weather
 - delayed response to disease or pest symptoms
 - poor selling decisions
 - avoidable production losses
-
-**Smart Farm Decision Support System** combines these signals into personalized, actionable recommendations for each farmer.
-
+**Kisan Mitra** combines these signals into personalized, actionable recommendations for each farmer.
 ---
 
-# 💡 Our Solution
+# Our Solution
 
 The platform allows a farmer to:
-
 1. Create a secure account.
 2. Set up a farm profile.
 3. Select location, land size, soil type, crop, and growth stage.
@@ -46,84 +72,57 @@ The platform allows a farmer to:
 6. Receive farming-relevant weather risk alerts.
 7. Upload crop/leaf images for AI-assisted health screening.
 8. View relevant mandi/commodity price trends.
-9. Receive a unified “Today's Farm Actions” summary.
+9. Receive a unified "Today's Farm Actions" summary.
 10. Access the platform from mobile or desktop.
-
 ---
 
-# 🎯 Core Product Concept
+# Core Product Concept
 
 Instead of building separate weather, disease, and market widgets, the system uses a **Decision Engine**.
-
 ```text
-                    FARM PROFILE
-                         │
-        ┌────────────────┼────────────────┐
-        ▼                ▼                ▼
-     WEATHER            CROP            MARKET
-        │              HEALTH              │
-        │                │                 │
-        └────────────────┼─────────────────┘
-                         ▼
-                  DECISION ENGINE
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-      IRRIGATION       ALERT        SELL / HOLD
-                         │
-                         ▼
-                  TODAY'S ACTIONS
+          FARM PROFILE
+  WEATHER      CROP      MARKET
+           HEALTH
+         DECISION ENGINE
+   IRRIGATION    ALERT    SELL / HOLD
+         TODAY'S ACTIONS
 ```
-
-The system converts raw data into practical recommendations.
-
 Example:
-
-> 🌧️ **Do not irrigate today**  
+>  **Do not irrigate today**
 > 22 mm rainfall is expected within the next 36 hours.
-
-> ⚠️ **Weather Risk: High**  
+>  **Weather Risk: High**
 > Heavy rainfall is expected. Avoid unnecessary irrigation and consider delaying field operations.
-
-> 🌱 **Crop Health: Attention Required**  
+>  **Crop Health: Attention Required**
 > The uploaded image shows symptoms that may indicate a fungal issue. Inspect lower leaves and field moisture conditions.
-
-> 📈 **Market Trend: Rising**  
+>  **Market Trend: Rising**
 > Wheat prices have increased over the last 7 days.
-
 ---
 
-# ✨ Key Features
+# Key Features
 
-## 1. 🔐 Farmer Authentication
+## 1. Farmer Authentication
 
 - Secure sign-up and login.
 - Individual farmer accounts.
 - Private farm data.
-- Database-level authorization using Row Level Security.
-
+- User-specific access control using JWT-based authentication and protected application routes.
 ---
 
-## 2. 🚜 Farm Profile
+## 2. Farm Profile
 
 Each farmer can configure:
-
 - Farm location
 - Land size
 - Soil type
 - Current/planned crop
 - Crop growth stage
-
 All recommendations are personalized using this information.
-
 ---
 
-## 3. 🌦️ Weather Intelligence
+## 3. Weather Intelligence
 
 The platform fetches forecast data for the farmer's location.
-
 Weather signals include:
-
 - Temperature
 - Rainfall
 - Rain probability
@@ -131,15 +130,12 @@ Weather signals include:
 - Wind
 - Evapotranspiration
 - Soil-related weather variables where available
-
 The system converts these values into farming-relevant information instead of simply displaying weather statistics.
-
 ---
 
-## 4. 💧 Irrigation Decision Engine
+## 4. Irrigation Decision Engine
 
 The irrigation engine evaluates:
-
 - Expected rainfall
 - Rain probability
 - Soil conditions
@@ -148,44 +144,35 @@ The irrigation engine evaluates:
 - Temperature
 - Evapotranspiration
 - Recent weather conditions
-
 Example decisions:
-
 ```text
 Rain expected
-      ↓
+   v
 Delay irrigation
-
 Low rainfall probability
-      +
+   +
 Low soil moisture
-      ↓
+   v
 Irrigate soon
-
 High rainfall
-      +
+   +
 Adequate expected precipitation
-      ↓
+   v
 Do not irrigate
 ```
-
 The recommendation is designed to reduce unnecessary irrigation and help farmers make timing decisions.
-
 ---
 
-## 5. ⚠️ Weather Risk Engine
+## 5. Weather Risk Engine
 
 The system evaluates farming-relevant risks such as:
-
 - Heavy rainfall
 - Extreme heat
 - Frost
 - Strong winds
 - Excess humidity
 - Dry/drought conditions
-
 A simplified risk score can combine multiple signals:
-
 ```text
 Rain Risk
 +
@@ -194,22 +181,18 @@ Heat Risk
 Wind Risk
 +
 Humidity/Dryness Risk
-        ↓
+    v
 Weather Risk Score
-        ↓
+    v
 LOW / MEDIUM / HIGH
 ```
-
 ---
 
-## 6. 🌱 AI Crop Health Monitoring
+## 6. AI Crop Health Monitoring
 
 Farmers can upload a crop or leaf photograph and optionally add an observation.
-
 The image is analyzed using a multimodal AI model.
-
 The system can return:
-
 - Possible crop
 - Possible issue
 - Confidence
@@ -217,39 +200,34 @@ The system can return:
 - Visual observations
 - Suggested next checks
 - Recommended next actions
-
 Example:
-
 ```json
 {
-  "crop": "Wheat",
-  "issue": "Possible fungal infection",
-  "confidence": 0.78,
-  "severity": "medium",
-  "observations": [
-    "yellowing leaves",
-    "brown lesions"
-  ],
-  "recommended_actions": [
-    "inspect lower leaves",
-    "check field moisture",
-    "seek local agricultural guidance if symptoms spread"
-  ]
+ "crop": "Wheat",
+ "issue": "Possible fungal infection",
+ "confidence": 0.78,
+ "severity": "medium",
+ "observations": [
+  "yellowing leaves",
+  "brown lesions"
+ ],
+ "recommended_actions": [
+  "inspect lower leaves",
+  "check field moisture",
+  "seek local agricultural guidance if symptoms spread"
+ ]
 }
 ```
 
 ### Important safety principle
 
 The system provides **AI-assisted screening**, not a laboratory diagnosis.
-
 The interface should clearly communicate uncertainty and recommend professional/local agricultural verification for serious cases.
-
 ---
 
-## 7. 📈 Market Price Insights
+## 7. Market Price Insights
 
 The system uses Indian mandi/commodity price data to provide:
-
 - Current relevant price
 - Recent price history
 - Minimum price
@@ -258,63 +236,137 @@ The system uses Indian mandi/commodity price data to provide:
 - 7-day trend
 - 30-day trend
 - Rising/falling/stable indication
-
 Example:
-
 ```text
 WHEAT
-
 Current Modal Price
-₹2,420 / quintal
-
+INR 2,420 / quintal
 7-Day Change
 +4.2%
-
 30-Day Change
 +8.7%
-
 Trend
-📈 Rising
+ Rising
 ```
-
 The system can convert the trend into a simple decision-support signal such as:
-
 **RISING / STABLE / FALLING**
-
 This is informational decision support and not a guarantee of future prices.
 
----
+## 7A. Crop Recommendation
 
-# 8. 🧠 Today's Farm Actions
+Kisan Mitra provides a crop recommendation module to help farmers identify crops that may be suitable for their farm conditions.
+The recommendation can consider the information available in the farmer profile and the application inputs.
+Relevant factors can include:
+- Farm location
+- Soil type
+- Season
+- Weather conditions
+- Water availability
+- Crop suitability information
 
-The most important dashboard component.
-
-Instead of forcing the farmer to interpret multiple charts, the platform prioritizes actions.
-
-Example:
+### Recommendation Flow
 
 ```text
-TODAY'S FARM ACTIONS
-
-🔴 HIGH PRIORITY
-Do not irrigate today.
-Rain expected within 36 hours.
-
-🟠 MEDIUM PRIORITY
-Inspect wheat leaves for possible fungal symptoms.
-
-🟢 LOW PRIORITY
-Market prices are trending upward.
+Farm location + Soil + Season + Weather + Water
+                    |
+                    v
+          Crop Recommendation Logic
+                    |
+                    v
+          Suitable Crop Options
+                    |
+                    v
+          Farmer Reviews Options
 ```
+The feature is intended to support crop-selection decisions. It should not be treated as a guarantee of yield, profitability, or suitability under every local condition.
+The recommendation can be presented in simple language so that the farmer can understand why a crop is being suggested.
 
-This creates the experience of a **digital farming advisor** rather than a collection of unrelated tools.
+## 8. Government Schemes Recommendation
 
+Kisan Mitra also helps farmers discover relevant government agricultural schemes.
+The feature is designed around a simple farmer workflow:
+1. The farmer selects or provides relevant crop information.
+2. The farmer provides applicable basic details when required.
+3. Kisan Mitra evaluates the available scheme information.
+4. The system identifies schemes that may be relevant to the selected situation.
+5. The farmer can view scheme details in one place.
+The Government Schemes section is intended to reduce the effort required to search through scattered information.
+
+### Scheme Information
+
+Depending on the available source data, a scheme entry can present:
+- Scheme name
+- Purpose
+- Relevant agricultural category
+- Eligibility information
+- Benefits
+- Important conditions
+- Required documents, where available
+- Application or official information source, where available
+
+### Why This Feature Matters
+
+Farmers may not know which government scheme is relevant to their crop, activity, or situation.
+Kisan Mitra brings scheme discovery into the same platform as weather, crop, irrigation, market, and crop-health information.
+
+### Decision Flow
+
+```text
+Farmer selects crop or requirement
+            |
+            v
+Relevant scheme information
+            |
+            v
+Eligibility and benefit details
+            |
+            v
+Relevant scheme recommendations
+            |
+            v
+Farmer reviews official information
+```
+The feature is intended as an information and discovery tool. Final eligibility and application decisions should always be verified against the applicable official government source.
 ---
 
-# 9. 📊 Unified Farmer Dashboard
+# Implemented Product Modules
+
+The current Kisan Mitra product combines the following implemented or product-defined modules:
+- Farmer authentication
+- Farm profile
+- Weather information
+- Weather-based irrigation recommendations
+- Weather risk alerts
+- AI-assisted crop-health screening
+- Market price insights
+- Crop recommendation
+- Government schemes recommendation
+- Unified farmer dashboard
+- Today's Farm Actions
+These modules are designed to work together so that the farmer receives useful actions instead of having to interpret each data source separately.
+---
+
+# 9. Today's Farm Actions
+
+The most important dashboard component.
+Instead of forcing the farmer to interpret multiple charts, the platform prioritizes actions.
+Example:
+```text
+TODAY'S FARM ACTIONS
+ HIGH PRIORITY
+Do not irrigate today.
+Rain expected within 36 hours.
+ MEDIUM PRIORITY
+Inspect wheat leaves for possible fungal symptoms.
+ LOW PRIORITY
+Market prices are trending upward.
+```
+This creates the experience of a **digital farming advisor** rather than a collection of unrelated tools.
+---
+
+# 9.  Unified Farmer Dashboard
 
 The dashboard combines:
-
 - Farm profile
 - Crop status
 - Weather
@@ -323,180 +375,130 @@ The dashboard combines:
 - Crop health
 - Market prices
 - Today's actions
-
 The farmer should be able to understand the current situation within seconds.
-
 ---
 
-# 🏗️ System Architecture
+# System Architecture
 
+Kisan Mitra follows a modular architecture so that the farmer-facing interface,
+business logic, authentication, database, and external services can evolve
+independently.
 ```text
-                         ┌─────────────────┐
-                         │     FARMER      │
-                         └────────┬────────┘
-                                  │
-                                  ▼
-                    ┌─────────────────────────┐
-                    │      Next.js / React    │
-                    │   Mobile-first Frontend │
-                    └────────────┬────────────┘
-                                 │
-                   ┌─────────────┼─────────────┐
-                   │             │             │
-                   ▼             ▼             ▼
-             ┌──────────┐  ┌───────────┐  ┌──────────┐
-             │ Supabase│  │ API Layer │  │  Gemini  │
-             │ Auth/DB │  │ /Server    │  │  Vision  │
-             │ Storage │  │ Actions    │  │          │
-             └────┬─────┘  └─────┬─────┘  └──────────┘
-                  │              │
-                  │       ┌──────┴────────┐
-                  │       │               │
-                  ▼       ▼               ▼
-             PostgreSQL  Open-Meteo   AGMARKNET/
-                          Weather      OGD Market Data
+                         FARMER
+                           |
+                           v
+                 +-------------------+
+                 |   React Frontend  |
+                 | Tailwind CSS UI   |
+                 +---------+---------+
+                           |
+                           v
+                 +-------------------+
+                 |   Backend Layer   |
+                 | Node.js / Express |
+                 | Flask / Python   |
+                 +---------+---------+
+                           |
+              +------------+------------+
+              |                         |
+              v                         v
+      +---------------+          +-------------+
+      | MongoDB       |          | Open-Meteo  |
+      | Application   |          | Weather API |
+      | Data          |          +-------------+
+      +---------------+
+              |
+              v
+      +-------------------+
+      | Decision Modules  |
+      | Crop / Weather /  |
+      | Irrigation /      |
+      | Schemes / Market  |
+      +-------------------+
+              |
+              v
+      +-------------------+
+      | Farmer Actions    |
+      | Clear and useful  |
+      | recommendations   |
+      +-------------------+
 ```
 
+## Architecture Principles
+
+- Keep the farmer interface simple.
+- Keep business rules separate from presentation.
+- Protect user-specific data with JWT authentication.
+- Store application data in MongoDB.
+- Consume weather information through Open-Meteo.
+- Handle API failures without breaking the complete interface.
+- Keep implemented features separate from planned features.
+- Design the application so new recommendation modules can be added later.
 ---
 
-# 🛠️ Technology Stack
+# Technology Stack
 
 | Layer | Technology |
 |---|---|
-| Frontend | Next.js, React |
+| Frontend | React |
 | Styling | Tailwind CSS |
-| UI Components | shadcn/ui |
-| Icons | Lucide |
-| Backend | Next.js API Routes / Server Actions |
-| Database | Supabase PostgreSQL |
-| Authentication | Supabase Auth |
-| Storage | Supabase Storage |
-| AI / Vision | Gemini API |
-| Weather | Open-Meteo |
-| Market Data | Government OGD / AGMARKNET |
-| Charts | Recharts |
-| Maps | Leaflet / OpenStreetMap |
-| Version Control | Git + GitHub |
-| Deployment | Vercel |
-| AI Development Tools | Cursor / Lovable / Replit Agent |
+| Frontend / Supporting Logic | Python where required for application or data-processing components |
+| Backend | Node.js |
+| Backend Framework | Express.js |
+| Python Backend / Services | Flask |
+| Database | MongoDB |
+| Authentication | JWT |
+| Weather API | Open-Meteo |
+| Deployment | Netlify and Railway |
+| Version Control | Git and GitHub |
+| Application Architecture | REST-style API communication |
 
----
+## API Integration
 
-# 🔌 Third-Party APIs & Data Sources
+## Open-Meteo Weather API
 
-## Weather — Open-Meteo
-
-**Source:** Open-Meteo
-
-Open-Meteo provides forecast variables useful for agriculture, including precipitation, precipitation probability, temperature, wind, evapotranspiration and soil-related variables where available.
-
-### Why we selected it
-
-- Suitable for location-based forecasts
-- Useful precipitation data
-- Useful for irrigation logic
-- Provides agriculture-relevant variables
-- Easy REST API integration
-- Suitable for rapid prototyping
-
-### Integration
-
+Open-Meteo provides location-based forecast information used by Kisan Mitra.
+The integration supports weather-driven features such as:
+- Temperature
+- Rainfall / precipitation
+- Rain probability
+- Humidity
+- Wind
+- Evapotranspiration where available
+- Forecast-based farming decisions
 ```text
 Farmer Location
-      ↓
+      |
+      v
 Latitude / Longitude
-      ↓
+      |
+      v
 Open-Meteo API
-      ↓
+      |
+      v
 Forecast Data
-      ↓
-Weather Risk Engine
-      ↓
-Irrigation Engine
-      ↓
+      |
+      v
+Weather and Irrigation Logic
+      |
+      v
 Farmer Recommendation
 ```
+The application should handle API failures gracefully and should not expose
+raw API errors directly to the farmer.
 
-Documentation:
-
-https://open-meteo.com/en/docs
-
----
-
-## Market Prices — Government OGD / AGMARKNET
-
-The project uses Indian agricultural market/mandi price data from the Government of India's Open Government Data ecosystem, where available for the selected commodities and markets.
-
-The data can provide market-level values such as:
-
-- Minimum price
-- Maximum price
-- Modal price
-- Commodity
-- Market
-- Date
-
-### Why we selected it
-
-- Indian agricultural market context
-- Government data source
-- Relevant to farmer selling decisions
-- Suitable for trend analysis
-
-Source:
-
-https://www.data.gov.in/
-
----
-
-## Crop Health — Gemini Vision
-
-A multimodal Gemini model is used for image-assisted crop health screening.
-
-### Input
-
-```text
-Crop Image
-+
-Farmer Description
-+
-Crop Information
-```
-
-### Output
-
-```text
-Possible Issue
-Confidence
-Severity
-Observations
-Recommended Next Steps
-```
-
-The model output is treated as an AI-assisted screening result rather than definitive agricultural diagnosis.
-
----
-
-# 🗄️ Database Design
+# Database Design
 
 The database is designed around the farmer and their farm.
-
 ```text
 users
-  │
-  └── farm_profiles
-          │
-          ├── crops
-          │
-          ├── weather_records
-          │
-          ├── irrigation_recommendations
-          │
-          ├── weather_alerts
-          │
-          ├── crop_health_logs
-          │
-          └── market_price_records
+  farm_profiles
+      crops
+      weather_records
+      irrigation_recommendations
+      weather_alerts
+      crop_health_logs
+      market_price_records
 ```
 
 ## Main Entities
@@ -504,7 +506,6 @@ users
 ### `farm_profiles`
 
 Stores:
-
 - Farmer ID
 - Location
 - Latitude
@@ -516,7 +517,6 @@ Stores:
 ### `crops`
 
 Stores:
-
 - Farm ID
 - Crop name
 - Variety if available
@@ -527,7 +527,6 @@ Stores:
 ### `weather_records`
 
 Stores:
-
 - Farm ID
 - Forecast date
 - Temperature
@@ -541,7 +540,6 @@ Stores:
 ### `irrigation_recommendations`
 
 Stores:
-
 - Farm ID
 - Crop ID
 - Recommendation
@@ -552,7 +550,6 @@ Stores:
 ### `weather_alerts`
 
 Stores:
-
 - Farm ID
 - Risk type
 - Severity
@@ -563,7 +560,6 @@ Stores:
 ### `crop_health_logs`
 
 Stores:
-
 - Farm ID
 - Crop ID
 - Image URL
@@ -576,7 +572,6 @@ Stores:
 ### `market_price_records`
 
 Stores:
-
 - Commodity
 - Market
 - Date
@@ -584,43 +579,69 @@ Stores:
 - Maximum price
 - Modal price
 - Source
-
 ---
 
-# 🔐 Security
+# Security
 
-Security is a core requirement.
+Security is an important part of Kisan Mitra because the application stores
+farmer-specific information.
 
-The application uses:
+## Authentication
 
-- Authentication
-- Secure session handling
-- Environment variables for API keys
-- Supabase Row Level Security
-- User-specific database access
-- Server-side handling of sensitive API keys
+Kisan Mitra uses JWT-based authentication.
+The application follows a protected-request model:
+```text
+Login
+  |
+  v
+Credentials Verified
+  |
+  v
+JWT Issued
+  |
+  v
+Client Stores Token Securely
+  |
+  v
+Token Sent With Protected Requests
+  |
+  v
+Backend Validates Token
+  |
+  v
+Request Allowed / Rejected
+```
+
+## Security Measures
+
+The application should follow these practices:
+- JWT-based authentication
+- Protected API routes
+- User-specific data access
+- Input validation
 - File upload validation
+- Environment variables for secrets
 - API error handling
+- No hard-coded credentials
+- Server-side validation of sensitive operations
+- Safe handling of external API responses
 
-### Data isolation
+## Data Isolation
 
-A farmer must only be able to access their own:
-
-- Farm profiles
+A farmer should only be able to access their own:
+- Farm profile
 - Crop records
-- Weather history
-- Irrigation history
-- Crop health logs
-- Personal dashboard data
-
+- Recommendations
+- Weather-related history
+- Crop health records
+- Saved scheme information
+- Personal dashboard information
 ---
 
-# 📱 Responsive Design
+# Responsive Design
 
 The platform is designed **mobile-first** because many farmers may primarily access the application through smartphones.
-
 UI principles:
-
 - Large touch targets
 - Simple language
 - Minimal data entry
@@ -630,170 +651,105 @@ UI principles:
 - Responsive cards
 - Readable charts
 - Simple navigation
-
 ---
 
-# 🚨 Error Handling
+# Error Handling
 
-The system handles common failure cases gracefully.
+Kisan Mitra is designed to avoid blank or broken states when an external
+service or user input fails.
+| Situation | Expected Response |
+|---|---|
+| Weather API failure | Show a clear retry/fallback message |
+| Invalid location | Ask the farmer to verify the location |
+| Unsupported crop | Explain that the recommendation is unavailable |
+| Image upload failure | Show supported format/size guidance |
+| AI analysis failure | Preserve the uploaded image and allow retry |
+| Invalid form data | Show field-level validation messages |
+| Unauthorized request | Reject the request and ask the user to authenticate |
+The interface should communicate failures in simple language rather than
+exposing technical server errors to the farmer.
 
-### Weather API failure
+# Future Features
 
-```text
-Unable to fetch live weather data.
+The following features are planned for future versions of Kisan Mitra.
+They are intentionally separated from the implemented product scope.
 
-Last available forecast:
-2 hours ago
+## 1. Voice-Based Farming Assistant
 
-[Retry]
-```
-
-### Invalid location
-
-```text
-We couldn't identify this location.
-
-Please check the village/city name.
-```
-
-### Unsupported crop
-
-```text
-This crop is not currently supported by
-the recommendation engine.
-
-You can continue using weather and
-market features.
-```
-
-### Image upload failure
-
-```text
-Upload failed.
-
-Please upload a JPG, PNG or WebP image
-under the supported file size.
-```
-
-### AI analysis failure
-
-```text
-Crop analysis is temporarily unavailable.
-
-Your image has been saved.
-Try analysis again later.
-```
-
-The UI should never show a blank or broken state.
-
----
-
-# 🌾 Optional / Future Features
-
-The architecture is designed to support additional modules.
-
-## Crop Recommendation Engine
-
-Recommend crops using:
-
-- Location
-- Soil
-- Season
-- Weather
-- Water availability
-- Historical suitability
-
----
-
-## 🎤 Voice-Based Farming Assistant
-
-Farmers can ask questions in regional languages.
-
+Farmers can ask farming questions using voice or simple regional-language
+conversation.
 Example:
-
-> “क्या आज गेहूं में पानी देना चाहिए?”
-
-The system can respond:
-
-> “आज सिंचाई न करें। अगले 36 घंटों में बारिश की संभावना है।”
-
-Potential future support:
-
+```text
+Farmer:
+"Should I water my wheat field today?"
+Assistant:
+"Rain is expected soon. Consider delaying irrigation."
+```
+Potential future support includes:
 - Hindi
 - English
 - Punjabi
 - Marathi
 - Other regional languages
 
----
+## 2. Community Pest and Disease Alerts
 
-## 🦠 Community Pest/Disease Alerts
-
-Farmers can optionally report crop-health issues.
-
-Nearby reports can be aggregated:
-
+Farmers could optionally report crop-health issues.
+Nearby reports could be aggregated using:
+- Crop type
+- Location
+- Symptoms
+- Time
+- Similar observations
+A possible workflow:
 ```text
-Multiple reports
-      ↓
-Same crop
-      +
-Nearby locations
-      +
-Similar symptoms
-      ↓
-Possible outbreak signal
+Multiple Reports
+      |
+      v
+Same Crop
+      |
+      v
+Nearby Locations
+      |
+      v
+Similar Symptoms
+      |
+      v
+Possible Outbreak Signal
+      |
+      v
+Community Alert
 ```
 
----
+## 3. Fertilizer and Resource Planning
 
-## 🧪 Fertilizer & Resource Planning
-
-Future recommendations can consider:
-
+Future recommendations could consider:
 - Crop
 - Soil
 - Growth stage
 - Soil test results
 - Nutrient deficiencies
+- Water availability
+The goal would be to help farmers plan resources more efficiently.
 
----
+## 4. Yield Prediction
 
-## 📊 Yield Prediction
-
-Future versions can combine:
-
+A future version could estimate expected production using:
 - Crop
-- Area
+- Cultivated area
 - Weather history
 - Crop health
 - Historical yield
 - Soil information
+The output would be an estimate for planning rather than a guaranteed result.
 
-to estimate expected production.
+# Example User Journey
 
----
-
-## 📶 Offline-First Support
-
-A future version can cache:
-
-- Farm profile
-- Latest recommendations
-- Recent weather
-- Crop-health history
-
-and synchronize data when connectivity returns.
-
----
-
-# 🧪 Example User Journey
-
-### Step 1 — Sign Up
+### Step 1 - Sign Up
 
 Farmer creates an account.
 
-### Step 2 — Farm Setup
+### Step 2 - Farm Setup
 
 ```text
 Location: Karnal, Haryana
@@ -803,233 +759,108 @@ Crop: Wheat
 Growth Stage: Tillering
 ```
 
-### Step 3 — Weather Analysis
+### Step 3 - Weather Analysis
 
 System fetches forecast data.
 
-### Step 4 — Irrigation Decision
+### Step 4 - Irrigation Decision
 
 Rainfall forecast is analyzed.
-
 Result:
-
 > **DO NOT IRRIGATE TODAY**
 
-### Step 5 — Crop Health
+### Step 5 - Crop Health
 
 Farmer uploads a leaf image.
-
 AI identifies possible symptoms.
 
-### Step 6 — Market
+### Step 6 - Market
 
 System displays recent wheat mandi prices.
 
-### Step 7 — Unified Recommendation
+### Step 7 - Unified Recommendation
 
 Dashboard summarizes:
-
 ```text
 TODAY
-
-🔴 Don't irrigate
-🟠 Inspect crop health
-🟢 Monitor wheat price trend
+ Don't irrigate
+ Inspect crop health
+ Monitor wheat price trend
 ```
-
 ---
 
-# 📁 Suggested Repository Structure
+# Local Development
 
-```text
-smart-farm-decision-support/
-│
-├── app/
-│   ├── dashboard/
-│   ├── farm/
-│   ├── crop-health/
-│   ├── market/
-│   ├── weather/
-│   ├── login/
-│   └── api/
-│
-├── components/
-│   ├── dashboard/
-│   ├── weather/
-│   ├── irrigation/
-│   ├── crop-health/
-│   ├── market/
-│   └── ui/
-│
-├── lib/
-│   ├── supabase/
-│   ├── weather/
-│   ├── market/
-│   ├── ai/
-│   └── decision-engine/
-│
-├── database/
-│   ├── schema.sql
-│   └── seed.sql
-│
-├── public/
-│
-├── docs/
-│   ├── architecture-diagram.png
-│   └── api-documentation.md
-│
-├── README.md
-├── package.json
-└── .env.example
-```
+## Prerequisites
 
----
+- Node.js and npm
+- Python and pip
+- MongoDB
+- Git
 
-# ⚙️ Local Development
-
-## 1. Clone repository
+## Setup
 
 ```bash
 git clone <REPOSITORY_URL>
-cd smart-farm-decision-support
+cd kisan-mitra
 ```
-
-## 2. Install dependencies
-
+Install frontend and backend dependencies:
 ```bash
 npm install
 ```
-
-## 3. Configure environment variables
-
-Create:
-
-```text
-.env.local
+Install Python dependencies when the Flask service is used:
+```bash
+pip install -r requirements.txt
 ```
 
-Example:
+## Environment Variables
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-
-GEMINI_API_KEY=
-
-WEATHER_API_URL=
-
-MARKET_API_KEY=
+MONGODB_URI=
+JWT_SECRET=
+OPEN_METEO_BASE_URL=
 ```
+Never commit real credentials or secrets.
 
-Never commit real API keys to GitHub.
+## Run
 
-## 4. Run development server
+Start the required backend service and then run the React frontend using the
+project's configured development commands.
 
-```bash
-npm run dev
-```
+# Deployment
 
-Open:
-
+Kisan Mitra uses Netlify and Railway as deployment services.
 ```text
-http://localhost:3000
+Git Repository
+      |
+      +----------------------+
+      |                      |
+      v                      v
+   Netlify                Railway
+   Frontend              Backend
+      |                      |
+      +----------+-----------+
+                 |
+                 v
+              MongoDB
 ```
 
----
-
-# 🚀 Deployment
-
-Recommended deployment:
-
-```text
-GitHub
-   ↓
-Vercel
-   ↓
-Next.js Application
-   ↓
-Supabase
-```
-
-Deployment checklist:
+## Deployment Checklist
 
 - Configure production environment variables.
-- Configure Supabase production project.
-- Apply database schema.
-- Configure authentication redirect URLs.
-- Configure storage policies.
-- Deploy to Vercel.
-- Test all API integrations.
-- Test mobile layout.
-- Test error states.
+- Configure MongoDB.
+- Configure JWT secret.
+- Configure frontend API URL.
+- Deploy the frontend to Netlify.
+- Deploy backend services through Railway.
+- Verify CORS and protected routes.
+- Test authentication.
+- Test Open-Meteo requests.
+- Test crop recommendations.
+- Test government scheme recommendations.
+- Test mobile layouts and error states.
 
----
-
-# 🧑‍💻 Development Strategy
-
-Development is divided into independent modules.
-
-### Phase 1 — Foundation
-
-- Project setup
-- UI system
-- Authentication
-- Supabase
-- Farm onboarding
-
-### Phase 2 — Decision Engine
-
-- Weather API
-- Irrigation engine
-- Weather risk engine
-
-### Phase 3 — Intelligence
-
-- Crop health AI
-- Market price analysis
-- Decision score
-
-### Phase 4 — Experience
-
-- Unified dashboard
-- Mobile optimization
-- Voice assistant
-- Community alerts
-
-### Phase 5 — Delivery
-
-- Testing
-- Error handling
-- Deployment
-- Documentation
-- Presentation
-
----
-
-# 📝 Git Commit Strategy
-
-The repository follows small, meaningful commits.
-
-Examples:
-
-```bash
-git commit -m "feat(auth): implement farmer authentication"
-git commit -m "feat(farm): add farm profile onboarding"
-git commit -m "feat(weather): integrate Open-Meteo forecast service"
-git commit -m "feat(irrigation): add rainfall-based irrigation engine"
-git commit -m "feat(weather): add farming risk classification"
-git commit -m "feat(health): add crop image upload"
-git commit -m "feat(ai): integrate crop health analysis"
-git commit -m "feat(market): add mandi price trend analysis"
-git commit -m "feat(dashboard): add today's farm actions"
-git commit -m "fix(api): handle external API failures gracefully"
-```
-
-During the hackathon, the team targets approximately **10 meaningful commits per development day**, without using meaningless commits only to increase the count.
-
----
-
-# 📊 Success Metrics
+# Success Metrics
 
 The project will be evaluated internally using:
 
@@ -1047,128 +878,117 @@ The project will be evaluated internally using:
 - Farmer can complete onboarding quickly
 - Dashboard communicates priorities immediately
 - Mobile UI is easy to navigate
-- Recommendations explain *why* an action is suggested
+- Recommendations explain **why** an action is suggested
 
 ### Product Impact
 
 The system should help reduce:
-
 - unnecessary irrigation
 - delayed response to crop-health problems
 - weather-related decision errors
 - information fragmentation
 - poor market timing decisions
-
 ---
 
-# 🏆 Why This Solution Is Different
+# Why This Solution Is Different
 
 Many agricultural applications display information.
-
 **Smart Farm Decision Support System turns information into decisions.**
-
 Instead of:
-
-> “Rain probability: 82%”
-
+> "Rain probability: 82%"
 we provide:
-
-> 🌧️ **Don't irrigate today — significant rain is expected within 36 hours.**
-
+>  **Don't irrigate today - significant rain is expected within 36 hours.**
 Instead of:
-
-> “Temperature: 36°C”
-
+> "Temperature: 36C"
 we provide:
-
-> ⚠️ **Heat risk is high — monitor crop stress and avoid unnecessary field operations during peak heat.**
-
+>  **Heat risk is high - monitor crop stress and avoid unnecessary field operations during peak heat.**
 Instead of:
-
-> “Wheat price: ₹2,420”
-
+> "Wheat price: INR 2,420"
 we provide:
-
-> 📈 **Wheat prices are trending upward over the recent period. Consider monitoring before selling.**
-
+>  **Wheat prices are trending upward over the recent period. Consider monitoring before selling.**
 The central principle is:
 
-# **Data → Intelligence → Action**
+# **Data -> Intelligence -> Action**
 
 ---
 
-# 🔮 Future Vision
+# Future Vision
 
 The long-term vision is to build a **personalized digital farming advisor** that continuously understands:
-
 ```text
 WHO
 Farmer + Farm
-
 WHAT
 Crop + Growth Stage
-
 WHERE
 Location + Soil
-
 WHEN
 Season + Weather
-
 WHAT IS HAPPENING
 Crop Health + Market
-
 WHAT TO DO
 Decision Engine
 ```
-
 This can evolve into a regional-language, voice-enabled and eventually offline-capable agricultural assistant for small and mid-sized farmers.
-
 ---
 
-# 👥 Team
+# Team
 
-**HackInMotion — TeamCode**
+## Team Kisan Mitra
 
-Team members:
-
-- Member 1
-- Member 2
-- Member 3
-- Member 4
-
+Kisan Mitra was developed by:
+| Team Member |
+|---|
+| Dhruv Bhola |
+| Aditya Singh |
+| Himani |
+| Avni Jain |
+The team worked collaboratively across:
+- Product planning
+- Frontend development
+- Backend development
+- Database integration
+- API integration
+- Recommendation features
+- Testing
+- Documentation
+- Deployment
+The contribution areas may overlap because the project was developed through
+continuous collaboration, debugging, testing, and review.
 ---
 
-# 📄 Hackathon Deliverables
+# Project Deliverables
 
-The repository contains / will contain:
-
+The project includes or is intended to include:
 - [ ] Fully functional deployed application
-- [ ] Frontend
-- [ ] Backend
-- [ ] Database
-- [ ] `architecture-diagram.png`
-- [ ] `api-documentation.md`
-- [ ] `presentation.pptx`
-- [ ] Complete `README.md`
-- [ ] API/data-source documentation
+- [ ] React frontend
+- [ ] Backend services
+- [ ] MongoDB database
+- [ ] JWT authentication
+- [ ] Open-Meteo integration
+- [ ] Crop recommendation module
+- [ ] Government schemes module
+- [ ] Weather and irrigation module
+- [ ] Crop health module
+- [ ] Farmer dashboard
+- [ ] Architecture documentation
+- [ ] API documentation
+- [ ] Complete README
 - [ ] Demo-ready farmer workflow
+---
+
+# License
+
+This project was developed as a collaborative technology project.
 
 ---
 
-# 📜 License
-
-This project was developed as a hackathon project.
-
-License and usage terms can be added based on the team's requirements.
-
----
-
-# 🌾 Final Vision
+# Final Vision
 
 > **A farmer should not need to understand APIs, weather models, market datasets, or AI.**
 >
 > **They should simply open the app and know what to do next.**
 
-## Smart Farm Decision Support System
+## Kisan Mitra
 
 ### **Know your farm. Understand the risk. Make the right decision at the right time.**
