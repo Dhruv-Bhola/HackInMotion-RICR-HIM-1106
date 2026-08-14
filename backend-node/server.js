@@ -19,13 +19,16 @@ mongoose
   });
 
 // ✅ CORS Configuration — Allow Netlify Frontend + Internal Flask
+const allowedOrigins = [
+  process.env.ALLOWED_ORIGIN,
+  "https://kisanmitraaaa.netlify.app",
+  "http://localhost:3000",
+  "http://localhost:3001"
+].filter(Boolean);
+
 const corsOptions = {
-  // In production, set these explicitly
-  origin: [
-    process.env.ALLOWED_ORIGIN || "http://localhost:3000",  // Frontend
-    "http://localhost:3001"  // Fallback for testing
-  ],
-  credentials: true,  // Allow cookies/auth headers
+  origin: allowedOrigins,
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200
