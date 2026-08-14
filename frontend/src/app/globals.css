@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Hind', sans-serif;
+  background-color: #f2f7f2;
+}
+
+.heading-font {
+  font-family: 'Tiro Devanagari Hindi', serif;
+}
