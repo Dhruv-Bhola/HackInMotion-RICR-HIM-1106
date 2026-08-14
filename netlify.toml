@@ -1,25 +1,35 @@
+# netlify.toml
 [build]
   base = "frontend"
   command = "npm run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
+  # 🔴 IMPORTANT: Set this in Netlify UI, not here (it's public)
+  # NEXT_PUBLIC_API_URL will be set in Netlify environment variables
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Proxy API requests to Node backend in production
+# ✅ Redirect API requests to Node backend
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR_BACKEND_URL/api/:splat"
+  to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
-[context.production.environment]
-  NEXT_PUBLIC_API_URL = "https://YOUR_BACKEND_URL"
+# ✅ Catch-all for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
-# Bind these in Netlify UI → Site settings → Environment variables:
-# MONGO_URI          — MongoDB connection string (backend-node)
-# JWT_SECRET         — Secret for signing JWT tokens (backend-node)
-# FLASK_API_URL      — URL of Flask AI service (backend-node → backend-flask)
-# NEXT_PUBLIC_API_URL — Public URL of Express API (frontend)
+# Production Environment Variables
+[context.production.environment]
+  # This should be your Express backend URL (set in Netlify UI)
+  NEXT_PUBLIC_API_URL = "https://your-express-backend.railway.app"
+
+# Development/Preview Environment
+[context.deploy-preview.environment]
+  NEXT_PUBLIC_API_URL = "http://localhost:5000"
