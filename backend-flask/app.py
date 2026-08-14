@@ -62,6 +62,9 @@ def analyze():
         print(f"✗ Analysis error: {str(exc)}")
         return jsonify({"error": f"Analysis failed: {str(exc)}"}), 500
 
+@app.route("/")
+def home():
+    return {"message": "Kisan Mitra Flask API is running!"}
 
 if __name__ == "__main__":
     # ✅ Use PORT environment variable (platform-provided)
