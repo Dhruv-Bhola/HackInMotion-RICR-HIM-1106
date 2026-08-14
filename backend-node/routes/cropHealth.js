@@ -1,3 +1,4 @@
+// backend-node/routes/cropHealth.js
 const express = require("express");
 const multer = require("multer");
 const FormData = require("form-data");
@@ -59,7 +60,10 @@ router.post("/analyze", authMiddleware, upload.single("image"), async (req, res)
     const cropInput = req.body.crop || "wheat";
     const cropId = CROP_MAP[cropInput] || cropInput.toLowerCase();
 
+    // ✅ Use environment variable, fallback to localhost for dev
     const flaskUrl = `${process.env.FLASK_API_URL || "http://localhost:5001"}/api/analyze`;
+    
+    console.log(`Forwarding to Flask: ${flaskUrl}`);
 
     const form = new FormData();
     form.append("image", fs.createReadStream(savedPath), {
@@ -71,17 +75,22 @@ router.post("/analyze", authMiddleware, upload.single("image"), async (req, res)
     const flaskResponse = await fetch(flaskUrl, {
       method: "POST",
       body: form,
-      headers: form.getHeaders()
+      headers: form.getHeaders(),
+      timeout: 30000  // 30 second timeout
     });
 
     if (!flaskResponse.ok) {
       const errText = await flaskResponse.text();
-      console.error("Flask error:", errText);
-      return res.status(502).json({ message: "AI analysis service unavailable. Please try again." });
+      console.error(`✗ Flask error (${flaskResponse.status}):`, errText);
+      return res.status(502).json({
+        message: "AI analysis service unavailable. Please check Flask service.",
+        detail: errText
+      });
     }
 
     const analysis = await flaskResponse.json();
 
+    // ✅ Save to MongoDB
     const scan = await CropScan.create({
       userId: req.user.id,
       crop: cropInput,
@@ -102,8 +111,10 @@ router.post("/analyze", authMiddleware, upload.single("image"), async (req, res)
       result: analysis
     });
   } catch (error) {
-    console.error("Crop health analyze error:", error);
-    res.status(500).json({ message: error.message || "Failed to analyze crop image." });
+    console.error("✗ Crop health analyze error:", error);
+    res.status(500).json({
+      message: error.message || "Failed to analyze crop image."
+    });
   } finally {
     if (savedPath && fs.existsSync(savedPath)) {
       fs.unlinkSync(savedPath);
@@ -120,7 +131,7 @@ router.get("/history", authMiddleware, async (req, res) => {
 
     res.json({ scans });
   } catch (error) {
-    console.error("History error:", error);
+    console.error("✗ History error:", error);
     res.status(500).json({ message: "Failed to fetch scan history." });
   }
 });
