@@ -1,9 +1,10 @@
+# backend-flask/app.py
 """Flask AI microservice — Rule-Based Expert System for Crop Health."""
 
 import os
-
-from dotenv import load_dotenv
 from flask import Flask, jsonify, request
+from flask_cors import CORS
+from dotenv import load_dotenv
 
 from expert_system.analyzer import analyze_crop_image
 from expert_system.disease_db import CROPS
@@ -13,10 +14,25 @@ load_dotenv()
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
 
+# ✅ Enable CORS for Express Backend
+cors_config = {
+    "origins": [
+        os.getenv("ALLOWED_ORIGIN", "http://localhost:5000"),
+        "http://localhost:5000"  # Fallback for local testing
+    ],
+    "methods": ["GET", "POST"],
+    "allow_headers": ["Content-Type"]
+}
+CORS(app, resources={"/api/*": cors_config})
+
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    return jsonify({"status": "ok", "service": "kisan-mitra-flask-ai", "engine": "rule-based-expert-system"})
+    return jsonify({
+        "status": "ok",
+        "service": "kisan-mitra-flask-ai",
+        "engine": "rule-based-expert-system"
+    })
 
 
 @app.route("/api/crops", methods=["GET"])
@@ -43,10 +59,15 @@ def analyze():
         result = analyze_crop_image(image_bytes, crop_id)
         return jsonify(result)
     except Exception as exc:
+        print(f"✗ Analysis error: {str(exc)}")
         return jsonify({"error": f"Analysis failed: {str(exc)}"}), 500
 
 
 if __name__ == "__main__":
+    # ✅ Use PORT environment variable (platform-provided)
     port = int(os.getenv("PORT", 5001))
+    host = os.getenv("HOST", "0.0.0.0")
     debug = os.getenv("FLASK_DEBUG", "0") == "1"
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    
+    print(f"✓ Flask running on {host}:{port}")
+    app.run(host=host, port=port, debug=debug)
