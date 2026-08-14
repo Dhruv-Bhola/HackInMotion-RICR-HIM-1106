@@ -3,6 +3,19 @@
 > **Because a farmer's biggest risk isn't hard work - it's making the wrong decision at the wrong time.**
 Kisan Mitra is a full-stack, AI-powered agricultural decision support platform that brings **weather intelligence, irrigation recommendations, crop-health monitoring, market-price insights, crop recommendation, government scheme discovery, and farm-specific actions** into one simple dashboard.
 
+# Live Website
+
+The deployed Kisan Mitra application is available online and is designed to
+work across mobile phones, tablets, laptops, and desktop devices.
+
+[Open Kisan Mitra - Live Website](https://kisanmitraaaa.netlify.app/)
+
+# Project Model Demo
+
+A demonstration of the Kisan Mitra farmer-support model is available on YouTube.
+
+[Watch the Project Model on YouTube](https://youtu.be/APx-VRcGBFY)
+
 ## **"What should I do on my farm today?"**
 
 # Project Status
@@ -29,19 +42,6 @@ the current product scope remains clear.
 | Community pest and disease alerts | Future |
 | Fertilizer and resource planning | Future |
 | Yield prediction | Future |
-
-# Live Website
-
-The deployed Kisan Mitra application is available online and is designed to
-work across mobile phones, tablets, laptops, and desktop devices.
-
-[Open Kisan Mitra - Live Website](https://kisanmitraaaa.netlify.app/)
-
-# Project Model Demo
-
-A demonstration of the Kisan Mitra farmer-support model is available on YouTube.
-
-[Watch the Project Model on YouTube](https://youtu.be/APx-VRcGBFY)
 
 # Problem
 
