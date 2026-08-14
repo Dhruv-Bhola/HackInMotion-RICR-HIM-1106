@@ -18,31 +18,6 @@ A demonstration of the Kisan Mitra farmer-support model is available on YouTube.
 
 ## **"What should I do on my farm today?"**
 
-# Project Status
-
-Kisan Mitra separates implemented modules from planned improvements so that
-the current product scope remains clear.
-
-## Implemented vs Future
-
-| Feature | Status |
-|---|---|
-| Farmer authentication | Implemented |
-| Farm profile | Implemented |
-| Weather information | Implemented |
-| Irrigation recommendation | Implemented |
-| Weather risk alerts | Implemented |
-| AI-assisted crop health screening | Implemented |
-| Market price insights | Implemented |
-| Crop recommendation | Implemented |
-| Government schemes recommendation | Implemented |
-| Unified farmer dashboard | Implemented |
-| Today's Farm Actions | Implemented |
-| Voice assistant | Future |
-| Community pest and disease alerts | Future |
-| Fertilizer and resource planning | Future |
-| Yield prediction | Future |
-
 # Problem
 
 Farmers continuously make high-impact decisions:
@@ -65,7 +40,7 @@ A wrong decision at the wrong time can lead to:
 
 The platform allows a farmer to:
 1. Create a secure account.
-2. Set up a farm profile.
+2. Set up a profile.
 3. Select location, land size, soil type, crop, and growth stage.
 4. Receive real-time weather information.
 5. Get weather-based irrigation recommendations.
@@ -190,6 +165,12 @@ LOW / MEDIUM / HIGH
 
 ## 6. AI Crop Health Monitoring
 
+We coded full fleched ml model
+Applied CNN 
+↓
+MobileNetV2 Feature Extraction
+↓
+Fine-tuned Disease Classifier
 Farmers can upload a crop or leaf photograph and optionally add an observation.
 The image is analyzed using a multimodal AI model.
 The system can return:
@@ -225,34 +206,7 @@ The system provides **AI-assisted screening**, not a laboratory diagnosis.
 The interface should clearly communicate uncertainty and recommend professional/local agricultural verification for serious cases.
 ---
 
-## 7. Market Price Insights
-
-The system uses Indian mandi/commodity price data to provide:
-- Current relevant price
-- Recent price history
-- Minimum price
-- Maximum price
-- Modal price where available
-- 7-day trend
-- 30-day trend
-- Rising/falling/stable indication
-Example:
-```text
-WHEAT
-Current Modal Price
-INR 2,420 / quintal
-7-Day Change
-+4.2%
-30-Day Change
-+8.7%
-Trend
- Rising
-```
-The system can convert the trend into a simple decision-support signal such as:
-**RISING / STABLE / FALLING**
-This is informational decision support and not a guarantee of future prices.
-
-## 7A. Crop Recommendation
+## 7. Crop Recommendation
 
 Kisan Mitra provides a crop recommendation module to help farmers identify crops that may be suitable for their farm conditions.
 The recommendation can consider the information available in the farmer profile and the application inputs.
@@ -292,18 +246,6 @@ The feature is designed around a simple farmer workflow:
 5. The farmer can view scheme details in one place.
 The Government Schemes section is intended to reduce the effort required to search through scattered information.
 
-### Scheme Information
-
-Depending on the available source data, a scheme entry can present:
-- Scheme name
-- Purpose
-- Relevant agricultural category
-- Eligibility information
-- Benefits
-- Important conditions
-- Required documents, where available
-- Application or official information source, where available
-
 ### Why This Feature Matters
 
 Farmers may not know which government scheme is relevant to their crop, activity, or situation.
@@ -327,23 +269,6 @@ Relevant scheme recommendations
 Farmer reviews official information
 ```
 The feature is intended as an information and discovery tool. Final eligibility and application decisions should always be verified against the applicable official government source.
----
-
-# Implemented Product Modules
-
-The current Kisan Mitra product combines the following implemented or product-defined modules:
-- Farmer authentication
-- Farm profile
-- Weather information
-- Weather-based irrigation recommendations
-- Weather risk alerts
-- AI-assisted crop-health screening
-- Market price insights
-- Crop recommendation
-- Government schemes recommendation
-- Unified farmer dashboard
-- Today's Farm Actions
-These modules are designed to work together so that the farmer receives useful actions instead of having to interpret each data source separately.
 ---
 
 # 9. Today's Farm Actions
@@ -423,17 +348,6 @@ independently.
       | recommendations   |
       +-------------------+
 ```
-
-## Architecture Principles
-
-- Keep the farmer interface simple.
-- Keep business rules separate from presentation.
-- Protect user-specific data with JWT authentication.
-- Store application data in MongoDB.
-- Consume weather information through Open-Meteo.
-- Handle API failures without breaking the complete interface.
-- Keep implemented features separate from planned features.
-- Design the application so new recommendation modules can be added later.
 ---
 
 # Technology Stack
@@ -678,19 +592,6 @@ They are intentionally separated from the implemented product scope.
 
 Farmers can ask farming questions using voice or simple regional-language
 conversation.
-Example:
-```text
-Farmer:
-"Should I water my wheat field today?"
-Assistant:
-"Rain is expected soon. Consider delaying irrigation."
-```
-Potential future support includes:
-- Hindi
-- English
-- Punjabi
-- Marathi
-- Other regional languages
 
 ## 2. Community Pest and Disease Alerts
 
@@ -701,25 +602,6 @@ Nearby reports could be aggregated using:
 - Symptoms
 - Time
 - Similar observations
-A possible workflow:
-```text
-Multiple Reports
-      |
-      v
-Same Crop
-      |
-      v
-Nearby Locations
-      |
-      v
-Similar Symptoms
-      |
-      v
-Possible Outbreak Signal
-      |
-      v
-Community Alert
-```
 
 ## 3. Fertilizer and Resource Planning
 
@@ -742,6 +624,9 @@ A future version could estimate expected production using:
 - Historical yield
 - Soil information
 The output would be an estimate for planning rather than a guaranteed result.
+
+## 5. Model Accuracy
+Accuracy can be increased by using different larger datasets.
 
 # Example User Journey
 
@@ -798,35 +683,6 @@ TODAY
 - MongoDB
 - Git
 
-## Setup
-
-```bash
-git clone <REPOSITORY_URL>
-cd kisan-mitra
-```
-Install frontend and backend dependencies:
-```bash
-npm install
-```
-Install Python dependencies when the Flask service is used:
-```bash
-pip install -r requirements.txt
-```
-
-## Environment Variables
-
-```env
-MONGODB_URI=
-JWT_SECRET=
-OPEN_METEO_BASE_URL=
-```
-Never commit real credentials or secrets.
-
-## Run
-
-Start the required backend service and then run the React frontend using the
-project's configured development commands.
-
 # Deployment
 
 Kisan Mitra uses Netlify and Railway as deployment services.
@@ -844,51 +700,6 @@ Git Repository
                  v
               MongoDB
 ```
-
-## Deployment Checklist
-
-- Configure production environment variables.
-- Configure MongoDB.
-- Configure JWT secret.
-- Configure frontend API URL.
-- Deploy the frontend to Netlify.
-- Deploy backend services through Railway.
-- Verify CORS and protected routes.
-- Test authentication.
-- Test Open-Meteo requests.
-- Test crop recommendations.
-- Test government scheme recommendations.
-- Test mobile layouts and error states.
-
-# Success Metrics
-
-The project will be evaluated internally using:
-
-### Technical
-
-- Authentication works
-- Database persistence works
-- APIs return usable data
-- Recommendations are generated correctly
-- Image analysis works
-- Application remains functional during API failures
-
-### User Experience
-
-- Farmer can complete onboarding quickly
-- Dashboard communicates priorities immediately
-- Mobile UI is easy to navigate
-- Recommendations explain **why** an action is suggested
-
-### Product Impact
-
-The system should help reduce:
-- unnecessary irrigation
-- delayed response to crop-health problems
-- weather-related decision errors
-- information fragmentation
-- poor market timing decisions
----
 
 # Why This Solution Is Different
 
@@ -943,38 +754,33 @@ Kisan Mitra was developed by:
 | Aditya Singh |
 | Himani |
 | Avni Jain |
-The team worked collaboratively across:
-- Product planning
-- Frontend development
-- Backend development
-- Database integration
-- API integration
-- Recommendation features
-- Testing
-- Documentation
-- Deployment
-The contribution areas may overlap because the project was developed through
-continuous collaboration, debugging, testing, and review.
 ---
 
-# Project Deliverables
+# Project Status
 
-The project includes or is intended to include:
-- [ ] Fully functional deployed application
-- [ ] React frontend
-- [ ] Backend services
-- [ ] MongoDB database
-- [ ] JWT authentication
-- [ ] Open-Meteo integration
-- [ ] Crop recommendation module
-- [ ] Government schemes module
-- [ ] Weather and irrigation module
-- [ ] Crop health module
-- [ ] Farmer dashboard
-- [ ] Architecture documentation
-- [ ] API documentation
-- [ ] Complete README
-- [ ] Demo-ready farmer workflow
+Kisan Mitra separates implemented modules from planned improvements so that
+the current product scope remains clear.
+
+## Implemented vs Future
+
+| Feature | Status |
+|---|---|
+| Farmer authentication | Implemented |
+| Farm profile | Implemented |
+| Weather information | Implemented |
+| Irrigation recommendation | Implemented |
+| Weather risk alerts | Implemented |
+| AI-assisted crop health screening | Implemented |
+| Market price insights | Implemented |
+| Crop recommendation | Implemented |
+| Government schemes recommendation | Implemented |
+| Unified farmer dashboard | Implemented |
+| Today's Farm Actions | Implemented |
+| Voice assistant | Future |
+| Community pest and disease alerts | Future |
+| Fertilizer and resource planning | Future |
+| Yield prediction | Future |
+
 ---
 
 # License
@@ -987,7 +793,7 @@ This project was developed as a collaborative technology project.
 
 > **A farmer should not need to understand APIs, weather models, market datasets, or AI.**
 >
-> **They should simply open the app and know what to do next.**
+> **They should simply open the app and know what to do next. Thats why it is mostly in Hindi..**
 
 ## Kisan Mitra
 
