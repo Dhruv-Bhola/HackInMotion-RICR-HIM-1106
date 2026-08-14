@@ -1,3 +1,4 @@
+// frontend/src/lib/api.js
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 export function getToken() {
@@ -33,15 +34,36 @@ async function apiFetch(path, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${path}`, { ...options, headers });
+  try {
+    const response = await fetch(`${API_URL}${path}`, { 
+      ...options, 
+      headers,
+      credentials: 'include'  // ✅ Include credentials for CORS
+    });
 
-  const data = await response.json().catch(() => ({}));
+    const data = await response.json().catch(() => ({}));
 
-  if (!response.ok) {
-    throw new Error(data.message || 'Request failed');
+    if (!response.ok) {
+      // ✅ Enhanced error messages
+      const errorMsg = data.message || `Request failed (${response.status})`;
+      console.error(`API Error at ${path}:`, {
+        status: response.status,
+        message: errorMsg,
+        data
+      });
+      throw new Error(errorMsg);
+    }
+
+    return data;
+  } catch (err) {
+    console.error(`Fetch error for ${path}:`, err.message);
+    
+    // ✅ Distinguish between network and server errors
+    if (err instanceof TypeError) {
+      throw new Error('नेटवर्क त्रुटि। इंटरनेट कनेक्शन जाँचें या API सर्वर जाँचें।');
+    }
+    throw err;
   }
-
-  return data;
 }
 
 export async function registerUser(payload) {
